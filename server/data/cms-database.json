@@ -1,0 +1,1192 @@
+{
+  "heroConfig": {
+    "intervalMs": 5500,
+    "slides": [
+      {
+        "discipline": "Brand Design",
+        "disciplineLabel": "01 // Brand Design",
+        "title": "Building Brands. Creating Identity. Inspiring Connection.",
+        "subtitle": "Logo Architecture • Social Media Systems • Event Collateral",
+        "tagline": "Great design should feel invisible.",
+        "description": "We transform ideas into distinctive visual identities through thoughtful branding, creative logo design, and engaging social media experiences that make your brand stand out.",
+        "supportingPhrase": "We create distinctive visual identities and engaging designs that make brands stand out and connect with their audience.",
+        "imageSrc": "/uploads/Modern_Charcoal_Studio_Portrait_1794059751680.png",
+        "metrics": [
+          {
+            "label": "Brand Systems",
+            "value": "45+",
+            "numericValue": 45,
+            "suffix": "+"
+          },
+          {
+            "label": "Social Reach",
+            "value": "180M+",
+            "numericValue": 180,
+            "suffix": "M+"
+          },
+          {
+            "label": "Flyer Runs",
+            "value": "120+",
+            "numericValue": 120,
+            "suffix": "+"
+          }
+        ],
+        "coverImage": "/uploads/Modern_Charcoal_Studio_Portrait_1794059751680.png",
+        "chartImage": "/uploads/Modern_Charcoal_Studio_Portrait_1794059751680.png"
+      },
+      {
+        "discipline": "Video Editing",
+        "disciplineLabel": "02 // Video Editing",
+        "title": "Bringing Moments to Life Through Motion.",
+        "subtitle": "Commercial Trailers • DaVinci Color Science • Sound Architecture",
+        "tagline": "Pacing that pulses. Imagery that endures.",
+        "description": "We transform ideas and memorable moments into captivating visual experiences through creative motion design, cinematic event highlights, and engaging reels that tell stories, capture attention, and leave a lasting impression.",
+        "supportingPhrase": "Creative motion, captivating highlights, and engaging reels that make every moment unforgettable.",
+        "imageSrc": "/images/video-showcase-1.jpg",
+        "metrics": [
+          {
+            "label": "Timeline Edits",
+            "value": "650+",
+            "numericValue": 650,
+            "suffix": "+"
+          },
+          {
+            "label": "Retention Lift",
+            "value": "42%",
+            "numericValue": 42,
+            "suffix": "%"
+          },
+          {
+            "label": "4K Deliveries",
+            "value": "100%",
+            "numericValue": 100,
+            "suffix": "%"
+          }
+        ]
+      },
+      {
+        "discipline": "Technical Analysis",
+        "disciplineLabel": "03 // Technical Analysis",
+        "title": "Trading with precision. Growing with discipline.",
+        "subtitle": "GBP/USD Specialization • Dec Edge Execution • 1:5 RR Target",
+        "tagline": "Dec Edge Strategy. Systematic 1:5 RR execution.",
+        "description": "Building wealth through knowledge, discipline, and consistency.",
+        "supportingPhrase": "Systematic execution targeting institutional order flow imbalances.",
+        "imageSrc": "/images/tech-analysis-showcase-1.jpg",
+        "metrics": [
+          {
+            "label": "Target RR",
+            "value": "1:5.0",
+            "numericValue": 5,
+            "suffix": ".0 RR"
+          },
+          {
+            "label": "Focus Asset",
+            "value": "GBP/USD",
+            "numericValue": 1,
+            "suffix": " Asset"
+          },
+          {
+            "label": "Win Focus",
+            "value": "94%",
+            "numericValue": 94,
+            "suffix": "%"
+          }
+        ]
+      }
+    ]
+  },
+  "brandProjects": [
+    {
+      "id": "ods-brand-identity",
+      "slug": "ods-brand-identity",
+      "title": "ODS MASTER BRAND ARCHITECTURE",
+      "client": "Olar Design Studio",
+      "category": "Logo Branding",
+      "year": "2026",
+      "shortCaption": "Precision vector emblem & monolithic identity suite",
+      "description": "Flagship emblem and complete brand identity system for ODS. Engineered with a distressed circular badge structure, custom monolithic stencil typography, and modular vector tokens for multi-medium execution.",
+      "strategy": "",
+      "campaignExplanation": "Full identity roll-out across digital platforms, packaging, and tactile merchandise.",
+      "designObjectives": [
+        "Establish monolithic brand authority",
+        "Ensure multi-scale vector fidelity",
+        "Define high-contrast typographic system"
+      ],
+      "deliverables": [
+        "Master Vector Logo Suite (AI/SVG/PNG)",
+        "Brand Identity Guidelines (60pp)",
+        "Typography Hierarchy Spec",
+        "Stationery & Merchandise Assets"
+      ],
+      "colors": [
+        "#070708",
+        "#18181B",
+        "#A1A1AA",
+        "#FFFFFF"
+      ],
+      "typography": [
+        "Syne Display Bold",
+        "Inter UI Sans",
+        "JetBrains Mono"
+      ],
+      "coverImage": "/uploads/Modern_Charcoal_Studio_Portrait_1794059552823.png",
+      "image": "/images/ods-logo.png",
+      "galleryImages": [
+        "/uploads/Modern_Charcoal_Studio_Portrait_1794059552823.png",
+        "/images/ods-logo.png",
+        "/images/brand-showcase-1.jpg",
+        "/images/reference-folioblox.png",
+        "/images/video-showcase-1.jpg",
+        "/images/tech-analysis-showcase-1.jpg"
+      ],
+      "metrics": "Official ODS Emblem",
+      "status": "published",
+      "order": 0
+    },
+    {
+      "id": "vortex-luxury-identity",
+      "slug": "vortex-luxury-identity",
+      "title": "VORTEX MONOLITHIC IDENTITY SUITE",
+      "client": "Vortex Luxury Group",
+      "category": "Logo Branding",
+      "year": "2026",
+      "shortCaption": "Architectural monogram & foil-stamped executive stationery",
+      "description": "Architectural monogram and executive stationery system crafted for a bespoke luxury collective. Combines geometric vector balance with tactile foil-stamped print specifications.",
+      "strategy": "Infusing austere Swiss minimalism with tactile luxury materials for high-net-worth brand positioning.",
+      "campaignExplanation": "Executive collateral roll-out across private client touchpoints.",
+      "designObjectives": [
+        "Create timeless geometric monogram",
+        "Establish tactile print standards",
+        "Engineer bespoke vector grid"
+      ],
+      "deliverables": [
+        "Geometric Monogram & Wordmark",
+        "Foil-Stamped Business Suite",
+        "Packaging Architecture",
+        "Brand Standards Manual"
+      ],
+      "colors": [
+        "#0B0B0D",
+        "#1F1F23",
+        "#71717A",
+        "#F4F4F5"
+      ],
+      "typography": [
+        "Cabinet Grotesk",
+        "Editorial New",
+        "Space Mono"
+      ],
+      "coverImage": "/images/brand-showcase-1.jpg",
+      "image": "/images/brand-showcase-1.jpg",
+      "galleryImages": [
+        "/images/brand-showcase-1.jpg",
+        "/images/ods-logo.png",
+        "/images/brand-showcase-1.jpg",
+        "/images/reference-folioblox.png",
+        "/images/video-showcase-1.jpg",
+        "/images/tech-analysis-showcase-1.jpg"
+      ],
+      "metrics": "Global Brand Rollout",
+      "status": "published",
+      "order": 1
+    },
+    {
+      "id": "velocity-social-suite",
+      "slug": "velocity-social-suite",
+      "title": "iVELOCITY GROUP SOCIAL SUITE",
+      "client": "Velocity Global Labs",
+      "category": "Social Media Design",
+      "year": "2026",
+      "shortCaption": "High-retention carousel system & engagement architecture",
+      "description": "High-retention social media visual system engineered for sustained organic growth. Multi-slide educational carousels, custom branded infographics, motion-ready story templates, and executive header architecture.",
+      "strategy": "Optimizing typography hierarchy and slide-to-slide continuity to achieve >70% carousel completion rate.",
+      "campaignExplanation": "A 90-day organic growth sprint combining technical teardowns with viral hook slides.",
+      "designObjectives": [
+        "Increase organic carousel retention",
+        "Standardize modular infographic templates",
+        "Elevate feed aesthetic cohesiveness"
+      ],
+      "deliverables": [
+        "10x Educational Carousel Decks",
+        "Feed Aesthetic Grid Architecture",
+        "Story & Reel Cover Suite",
+        "Engagement Hook Templates"
+      ],
+      "colors": [
+        "#070709",
+        "#18181C",
+        "#A1A1AA",
+        "#FFFFFF"
+      ],
+      "typography": [
+        "Clash Display",
+        "Satoshi",
+        "JetBrains Mono"
+      ],
+      "coverImage": "/images/brand-showcase-1.jpg",
+      "image": "/images/brand-showcase-1.jpg",
+      "galleryImages": [
+        "/images/brand-showcase-1.jpg",
+        "/images/ods-logo.png",
+        "/images/brand-showcase-1.jpg",
+        "/images/reference-folioblox.png",
+        "/images/video-showcase-1.jpg",
+        "/images/tech-analysis-showcase-1.jpg"
+      ],
+      "metrics": "+340% Follower Surge",
+      "status": "published",
+      "order": 2
+    },
+    {
+      "id": "aether-social-identity",
+      "slug": "aether-protocol-social",
+      "title": "AETHER PROTOCOL SOCIAL ARCHITECTURE",
+      "client": "Aether Labs Global",
+      "category": "Social Media Design",
+      "year": "2025",
+      "shortCaption": "Minimalist typographic grids & institutional announcement kit",
+      "description": "Comprehensive social media campaign system and modular announcement kit for an institutional liquidity protocol. Designed with minimalist typographic grids, data visualization cards, and launch banners.",
+      "strategy": "Positioning decentralized protocol finance as institutional grade through understated typography and high-density technical cards.",
+      "campaignExplanation": "Series A funding announcement and mainnet launch rollout.",
+      "designObjectives": [
+        "Institutional protocol positioning",
+        "Clean financial chart graphics",
+        "Unified modular Figma tokens"
+      ],
+      "deliverables": [
+        "Social Announcement Kit",
+        "Modular Data Graphic Templates",
+        "Figma Component Tokens",
+        "Executive Launch Deck"
+      ],
+      "colors": [
+        "#09090B",
+        "#18181B",
+        "#71717A",
+        "#E4E4E7"
+      ],
+      "typography": [
+        "Plus Jakarta Sans",
+        "Syne",
+        "IBM Plex Mono"
+      ],
+      "coverImage": "/images/tech-analysis-showcase-1.jpg",
+      "image": "/images/tech-analysis-showcase-1.jpg",
+      "galleryImages": [
+        "/images/tech-analysis-showcase-1.jpg",
+        "/images/ods-logo.png",
+        "/images/brand-showcase-1.jpg",
+        "/images/reference-folioblox.png",
+        "/images/video-showcase-1.jpg",
+        "/images/tech-analysis-showcase-1.jpg"
+      ],
+      "metrics": "$28M Series A Secured",
+      "status": "published",
+      "order": 3
+    },
+    {
+      "id": "kroma-minimal-logo",
+      "slug": "kroma-minimal-logo",
+      "title": "KROMA STUDIO VECTOR ARCHITECTURE",
+      "client": "Kroma Design Labs",
+      "category": "Logo Branding",
+      "year": "2026",
+      "shortCaption": "Geometric glyph geometry & monolithic emblem framework",
+      "description": "Clean geometric glyph architecture and custom emblem framework designed for an avant-garde digital agency. Engineered with precision mathematical grids.",
+      "strategy": "Deconstructing modernist Swiss grids into dynamic adaptive emblems.",
+      "campaignExplanation": "Brand debut across agency portfolio, physical signage, and client collateral.",
+      "designObjectives": [
+        "Construct mathematical vector geometry",
+        "Establish negative-space mark",
+        "Create dark-mode brand tokens"
+      ],
+      "deliverables": [
+        "Primary Vector Mark",
+        "Monochrome Glyph Tokens",
+        "Figma Component Library"
+      ],
+      "colors": [
+        "#070708",
+        "#27272A",
+        "#D4D4D8",
+        "#FFFFFF"
+      ],
+      "typography": [
+        "Syne Extra Bold",
+        "Geist Mono",
+        "Inter"
+      ],
+      "coverImage": "/images/reference-folioblox.png",
+      "image": "/images/reference-folioblox.png",
+      "galleryImages": [
+        "/images/ods-logo.png",
+        "/images/brand-showcase-1.jpg",
+        "/images/reference-folioblox.png",
+        "/images/video-showcase-1.jpg",
+        "/images/tech-analysis-showcase-1.jpg",
+        "/images/portrait-front-orig.png"
+      ],
+      "metrics": "Agency Rebrand of the Year",
+      "status": "published",
+      "order": 3
+    },
+    {
+      "id": "nocturne-event-flyers",
+      "slug": "nocturne-event-flyers",
+      "title": "NOCTURNE AVANT-GARDE EVENT FLYERS",
+      "client": "Nocturne Electronic Festival",
+      "category": "Flyers",
+      "year": "2025",
+      "shortCaption": "Swiss-grid promotional posters & tactile print collateral",
+      "description": "Cutting-edge promotional flyers and posters for electronic music events, underground venues, and creative conferences. Precision Swiss typography, textured halftones, and high-impact date/lineup information hierarchy.",
+      "strategy": "Combining brutalist layout principles with high-contrast monochrome printing for cultural event recognition.",
+      "campaignExplanation": "Underground club night promotional rollout spanning physical street posters and digital social passes.",
+      "designObjectives": [
+        "Maximize night-time street legibility",
+        "Create collectible physical print artifacts",
+        "Synchronize digital and print formats"
+      ],
+      "deliverables": [
+        "A1/A2 Print-Ready Posters (300DPI CMYK)",
+        "9:16 Digital Event Flyers",
+        "Square Social Feed Promo Passes",
+        "VIP Ticket & Wristband Collateral"
+      ],
+      "colors": [
+        "#09090C",
+        "#18181B",
+        "#71717A",
+        "#F5F5F7"
+      ],
+      "typography": [
+        "Neue Haas Grotesk",
+        "FK Grotesk",
+        "Courier Prime"
+      ],
+      "coverImage": "/images/video-showcase-1.jpg",
+      "image": "/images/video-showcase-1.jpg",
+      "galleryImages": [
+        "/images/video-showcase-1.jpg",
+        "/images/ods-logo.png",
+        "/images/brand-showcase-1.jpg",
+        "/images/reference-folioblox.png",
+        "/images/video-showcase-1.jpg",
+        "/images/tech-analysis-showcase-1.jpg"
+      ],
+      "metrics": "Sold Out 4,500 Capacity",
+      "status": "published",
+      "order": 4
+    },
+    {
+      "id": "zenith-fintech-identity",
+      "slug": "zenith-fintech-identity",
+      "title": "ZENITH APEX FINTECH MONOGRAM",
+      "client": "Zenith Capital Group",
+      "category": "Logo Branding",
+      "year": "2025",
+      "shortCaption": "High-contrast banking mark & precision financial emblem",
+      "description": "Understated luxury monogram and comprehensive financial stationery designed for an ultra-high-net-worth algorithmic capital management firm.",
+      "strategy": "Conveying institutional permanence and algorithmic precision through austere typographic marks.",
+      "campaignExplanation": "Private institutional equity launch.",
+      "designObjectives": [
+        "Ultra-clean typographic lockup",
+        "High-security certificate watermarks",
+        "Foil debossed corporate cards"
+      ],
+      "deliverables": [
+        "Vector Executive Crest",
+        "Private Investor Stationery",
+        "Institutional Token Suite"
+      ],
+      "colors": [
+        "#08080A",
+        "#1C1C21",
+        "#9CA3AF",
+        "#FAFAFA"
+      ],
+      "typography": [
+        "Editorial New",
+        "Cabinet Grotesk",
+        "JetBrains Mono"
+      ],
+      "coverImage": "/images/ods-logo.png",
+      "image": "/images/ods-logo.png",
+      "galleryImages": [
+        "/images/ods-logo.png",
+        "/images/brand-showcase-1.jpg",
+        "/images/reference-folioblox.png",
+        "/images/video-showcase-1.jpg",
+        "/images/tech-analysis-showcase-1.jpg",
+        "/images/portrait-front-orig.png"
+      ],
+      "metrics": ".4B Assets Under Management",
+      "status": "published",
+      "order": 4
+    },
+    {
+      "id": "solaris-craft-flyers",
+      "slug": "solaris-craft-flyers",
+      "title": "SOLARIS CRAFT PROMOTIONAL FLYERS",
+      "client": "Solaris Craft Roastery",
+      "category": "Flyers",
+      "year": "2025",
+      "shortCaption": "Brutalist promotional flyers & physical storefront collateral",
+      "description": "Brutalist promotional flyers, menu cards, and physical storefront collateral for an artisan roastery. Custom stamp textures, blind-debossed micro-typography, and tactile paper stock specification.",
+      "strategy": "Artisanal tactile branding celebrating craft coffee through micro-typography and unbleached cotton paper stock.",
+      "campaignExplanation": "Grand opening promotional campaign with direct-mail cards and boutique window posters.",
+      "designObjectives": [
+        "Celebrate craft roasting tradition",
+        "High tactile sensory impact",
+        "Modular seasonal promotional cards"
+      ],
+      "deliverables": [
+        "Retail Promo Flyers",
+        "Direct Mail Postcards",
+        "Store Opening Posters",
+        "Die-Cut Product Tags"
+      ],
+      "colors": [
+        "#0C0B0A",
+        "#262420",
+        "#71717A",
+        "#F4F4F5"
+      ],
+      "typography": [
+        "Editorial New",
+        "Suisse Int'l",
+        "Druk Wide"
+      ],
+      "coverImage": "/images/brand-showcase-1.jpg",
+      "image": "/images/brand-showcase-1.jpg",
+      "galleryImages": [
+        "/images/brand-showcase-1.jpg",
+        "/images/ods-logo.png",
+        "/images/brand-showcase-1.jpg",
+        "/images/reference-folioblox.png",
+        "/images/video-showcase-1.jpg",
+        "/images/tech-analysis-showcase-1.jpg"
+      ],
+      "metrics": "Sold Out in 48 Hours",
+      "status": "published",
+      "order": 5
+    },
+    {
+      "id": "brand-1794411733361",
+      "slug": "new-brand-1794411733362",
+      "title": "NEW BRAND IDENTITY SUITE",
+      "client": "Studio Client",
+      "category": "Logo Branding",
+      "year": "2026",
+      "shortCaption": "Concise project overview for homepage preview",
+      "description": "Comprehensive editorial case study and brand strategy description.",
+      "strategy": "Strategic brand positioning architecture.",
+      "deliverables": [
+        "Master Vector Suite",
+        "Brand Guidelines"
+      ],
+      "colors": [
+        "#070708",
+        "#FFFFFF"
+      ],
+      "typography": [
+        "Syne Display",
+        "Inter UI"
+      ],
+      "coverImage": "/images/brand-showcase-1.jpg",
+      "image": "/images/brand-showcase-1.jpg",
+      "galleryImages": [
+        "/images/brand-showcase-1.jpg",
+        "/images/ods-logo.png",
+        "/images/brand-showcase-1.jpg",
+        "/images/reference-folioblox.png",
+        "/images/video-showcase-1.jpg",
+        "/images/tech-analysis-showcase-1.jpg"
+      ],
+      "status": "published",
+      "order": 6
+    },
+    {
+      "id": "solaris-social-campaign",
+      "slug": "solaris-social-campaign",
+      "title": "SOLARIS ROASTERY SOCIAL CAMPAIGN",
+      "client": "Solaris Craft Coffee",
+      "category": "Social Media Design",
+      "year": "2026",
+      "shortCaption": "Artisan aesthetic social feeds & seasonal release carousels",
+      "description": "Artisan visual strategy and Instagram editorial carousel design for specialty coffee roasters. Features custom grain overlays, warm chromatic grading, and recipe breakdown layouts.",
+      "strategy": "Creating tactile warmth and sensory craving through micro-detailed photography templates.",
+      "campaignExplanation": "Direct-to-consumer quarterly coffee subscription launch.",
+      "designObjectives": [
+        "Establish warm artisanal color scheme",
+        "Design step-by-step brew guide carousels",
+        "Boost story reply engagement"
+      ],
+      "deliverables": [
+        "Seasonal Release Carousel Templates",
+        "Instagram Story Highlight Icons",
+        "Community Poll Graphics"
+      ],
+      "colors": [
+        "#12100E",
+        "#2B231D",
+        "#B59F84",
+        "#F7F4EF"
+      ],
+      "typography": [
+        "Editorial New",
+        "Cabinet Grotesk",
+        "Courier"
+      ],
+      "coverImage": "/images/brand-showcase-1.jpg",
+      "image": "/images/brand-showcase-1.jpg",
+      "galleryImages": [
+        "/images/ods-logo.png",
+        "/images/brand-showcase-1.jpg",
+        "/images/reference-folioblox.png",
+        "/images/video-showcase-1.jpg",
+        "/images/tech-analysis-showcase-1.jpg",
+        "/images/portrait-front-orig.png"
+      ],
+      "metrics": "94% Engagement Surge",
+      "status": "published",
+      "order": 6
+    },
+    {
+      "id": "apex-market-digest",
+      "slug": "apex-market-digest",
+      "title": "APEX TRADING SOCIAL CAROUSELS",
+      "client": "Apex Financial Intelligence",
+      "category": "Social Media Design",
+      "year": "2026",
+      "shortCaption": "Data-driven market breakdown slides & viral financial graphics",
+      "description": "Precision financial breakdowns and viral macro market carousels crafted for a leading quantitative insights platform.",
+      "strategy": "Transforming complex multi-timeframe order flow charts into bite-sized viral slides.",
+      "campaignExplanation": "Weekly market digest and Telegram community acquisition sprint.",
+      "designObjectives": [
+        "High contrast dark theme",
+        "Instant mobile chart readability",
+        "Consistent branded watermark markers"
+      ],
+      "deliverables": [
+        "Weekly Market Digest Templates",
+        "Macro Infographic Decks",
+        "Telegram Channel Banners"
+      ],
+      "colors": [
+        "#06080B",
+        "#111827",
+        "#34D399",
+        "#F9FAFB"
+      ],
+      "typography": [
+        "JetBrains Mono",
+        "Inter",
+        "Syne"
+      ],
+      "coverImage": "/images/tech-analysis-showcase-1.jpg",
+      "image": "/images/tech-analysis-showcase-1.jpg",
+      "galleryImages": [
+        "/images/ods-logo.png",
+        "/images/brand-showcase-1.jpg",
+        "/images/reference-folioblox.png",
+        "/images/video-showcase-1.jpg",
+        "/images/tech-analysis-showcase-1.jpg",
+        "/images/portrait-front-orig.png"
+      ],
+      "metrics": "120k Viral Impressions",
+      "status": "published",
+      "order": 7
+    },
+    {
+      "id": "metropolis-art-exhibition",
+      "slug": "metropolis-art-exhibition",
+      "title": "METROPOLIS GALLERY FLYER SUITE",
+      "client": "Metropolis Modern Museum",
+      "category": "Flyers",
+      "year": "2026",
+      "shortCaption": "Minimalist architectural gallery invites & exhibition posters",
+      "description": "Exhibition posters, VIP private viewing invites, and tactile catalog covers for a high-profile contemporary architecture and digital sculpture retrospective.",
+      "strategy": "Austere architectural hierarchy utilizing strict vertical margins and metallic foil accents.",
+      "campaignExplanation": "International gallery opening in Berlin and London.",
+      "designObjectives": [
+        "Architectural visual balance",
+        "Premium paper stock specification",
+        "High contrast gallery window display"
+      ],
+      "deliverables": [
+        "Exhibition Wall Posters (B1)",
+        "VIP Foil-Stamped Invitations",
+        "Handout Gallery Maps"
+      ],
+      "colors": [
+        "#050505",
+        "#1F1F1F",
+        "#8E8E93",
+        "#F2F2F7"
+      ],
+      "typography": [
+        "Neue Haas Grotesk",
+        "Didot",
+        "Space Mono"
+      ],
+      "coverImage": "/images/reference-folioblox.png",
+      "image": "/images/reference-folioblox.png",
+      "galleryImages": [
+        "/images/ods-logo.png",
+        "/images/brand-showcase-1.jpg",
+        "/images/reference-folioblox.png",
+        "/images/video-showcase-1.jpg",
+        "/images/tech-analysis-showcase-1.jpg",
+        "/images/portrait-front-orig.png"
+      ],
+      "metrics": "12,000 Visitors Opening Week",
+      "status": "published",
+      "order": 9
+    },
+    {
+      "id": "cyber-pulse-festival",
+      "slug": "cyber-pulse-festival",
+      "title": "CYBER PULSE CONCERT FLYER SERIES",
+      "client": "Pulse Music Collective",
+      "category": "Flyers",
+      "year": "2026",
+      "shortCaption": "Distorted kinetic concert flyers & holographic passes",
+      "description": "High-velocity festival posters and digital tour passes utilizing distressed halftones, warped typography, and holographic foil accents.",
+      "strategy": "Unconventional typographic distortion inspired by 90s industrial rave culture.",
+      "campaignExplanation": "Six-city international summer arena tour promotional campaign.",
+      "designObjectives": [
+        "Immediate kinetic energy",
+        "Multi-platform asset synchronization",
+        "Counterfeit-resistant tour pass badges"
+      ],
+      "deliverables": [
+        "Arena Tour Posters",
+        "VIP Holographic Passes",
+        "Instagram Story Tour Schedule"
+      ],
+      "colors": [
+        "#080808",
+        "#202020",
+        "#A3A3A3",
+        "#FFFFFF"
+      ],
+      "typography": [
+        "Druk Wide Super",
+        "Syne",
+        "Courier New"
+      ],
+      "coverImage": "/images/video-showcase-1.jpg",
+      "image": "/images/video-showcase-1.jpg",
+      "galleryImages": [
+        "/images/ods-logo.png",
+        "/images/brand-showcase-1.jpg",
+        "/images/reference-folioblox.png",
+        "/images/video-showcase-1.jpg",
+        "/images/tech-analysis-showcase-1.jpg",
+        "/images/portrait-front-orig.png"
+      ],
+      "metrics": "Six Arenas Sold Out",
+      "status": "published",
+      "order": 10
+    }
+  ],
+  "videoProjects": [
+    {
+      "id": "cyber-reel-2026",
+      "slug": "event-highlight",
+      "title": "EVENT HIGHLIGHT",
+      "client": "Apex Cinematic Studios",
+      "duration": "",
+      "format": "4K DCI ProRes 4444",
+      "role": "ound Designer & Colorist",
+      "views": "12.4M",
+      "shortCaption": "4K DCI commercial trailer with subterranean sound design",
+      "description": "High-octane commercial trailer combining anamorphic lens flares, dynamic match cuts, subterranean bass sound design, and custom 35mm film halation.",
+      "coverImage": "/images/video-showcase-1.jpg",
+      "image": "/images/video-showcase-1.jpg",
+      "videoUrl": "",
+      "aspectRatio": "16:9 Widescreen",
+      "tags": [
+        "Sound Design",
+        "DaVinci Resolve",
+        "Match Cutting",
+        "Film Grain"
+      ],
+      "logBeforeImage": "/images/video-showcase-1.jpg",
+      "gradeAfterImage": "/images/video-showcase-1.jpg",
+      "status": "published",
+      "order": 0,
+      "recentVideos": [
+        {
+          "id": "ev-1",
+          "title": "Nocturne Festival Aftermovie",
+          "client": "Nocturne Live",
+          "duration": "02:14",
+          "thumbnail": "/images/video-showcase-1.jpg",
+          "videoUrl": "",
+          "aspectRatio": "16:9",
+          "date": "2026"
+        },
+        {
+          "id": "ev-2",
+          "title": "Apex Global Summit Keynote Cut",
+          "client": "Apex Studios",
+          "duration": "01:48",
+          "thumbnail": "/images/brand-showcase-1.jpg",
+          "videoUrl": "",
+          "aspectRatio": "16:9",
+          "date": "2026"
+        },
+        {
+          "id": "ev-3",
+          "title": "Runway Collective Backstage Film",
+          "client": "Runway Collective",
+          "duration": "01:35",
+          "thumbnail": "/images/reference-folioblox.png",
+          "videoUrl": "",
+          "aspectRatio": "16:9",
+          "date": "2026"
+        },
+        {
+          "id": "ev-4",
+          "title": "Vortex Private Launch Recap",
+          "client": "Vortex Group",
+          "duration": "01:22",
+          "thumbnail": "/images/tech-analysis-showcase-1.jpg",
+          "videoUrl": "",
+          "aspectRatio": "16:9",
+          "date": "2025"
+        }
+      ]
+    },
+    {
+      "id": "gt3-porsche-spec",
+      "slug": "motion-design",
+      "title": "MOTION DESIGN",
+      "client": "Spec Film / Stuttgart Motoring",
+      "duration": "02:18",
+      "format": "8K RED Monstro",
+      "role": "Director of Post-Production",
+      "views": "8.9M",
+      "shortCaption": "9,000 RPM rhythm-locked automotive montage",
+      "description": "Rhythm-locked montage matching 9,000 RPM flat-six engine frequencies with kinetic jump cuts and custom foley recorded on track.",
+      "coverImage": "/images/video-showcase-1.jpg",
+      "image": "/images/video-showcase-1.jpg",
+      "videoUrl": "",
+      "aspectRatio": "16:9 Widescreen",
+      "tags": [
+        "Automotive",
+        "Foley Recording",
+        "Speed Ramping",
+        "Commercial"
+      ],
+      "logBeforeImage": "/images/video-showcase-1.jpg",
+      "gradeAfterImage": "/images/video-showcase-1.jpg",
+      "status": "published",
+      "order": 1,
+      "recentVideos": [
+        {
+          "id": "md-1",
+          "title": "ODS Kinetic Identity Reveal",
+          "client": "Olar Design Studio",
+          "duration": "00:45",
+          "thumbnail": "/images/ods-logo.png",
+          "videoUrl": "",
+          "aspectRatio": "16:9",
+          "date": "2026"
+        },
+        {
+          "id": "md-2",
+          "title": "Aether Protocol 3D Product Film",
+          "client": "Aether Labs",
+          "duration": "01:15",
+          "thumbnail": "/images/tech-analysis-showcase-1.jpg",
+          "videoUrl": "",
+          "aspectRatio": "16:9",
+          "date": "2026"
+        },
+        {
+          "id": "md-3",
+          "title": "911 GT3 Telemetry Motion Cut",
+          "client": "Stuttgart Motoring",
+          "duration": "01:05",
+          "thumbnail": "/images/video-showcase-1.jpg",
+          "videoUrl": "",
+          "aspectRatio": "16:9",
+          "date": "2026"
+        },
+        {
+          "id": "md-4",
+          "title": "Solaris Typography Title Sequence",
+          "client": "Solaris Craft",
+          "duration": "00:52",
+          "thumbnail": "/images/brand-showcase-1.jpg",
+          "videoUrl": "",
+          "aspectRatio": "16:9",
+          "date": "2025"
+        }
+      ]
+    },
+    {
+      "id": "fintech-manifesto",
+      "slug": "social-media=short/reels",
+      "title": "SOCIAL MEDIA SHORT / REELS",
+      "client": "Kash Global Banking",
+      "duration": "01:00",
+      "format": "Arri Alexa Mini LF",
+      "role": "Visual Editor & 3D Motion Supervisor",
+      "views": "24.1M",
+      "shortCaption": "Prime-time global broadcast spot with precision pacing",
+      "description": "Global campaign spot broadcast during prime-time sports. Seamlessly blends high-speed phantom camera footage with precision editorial pacing.",
+      "coverImage": "/images/tech-analysis-showcase-1.jpg",
+      "image": "/images/tech-analysis-showcase-1.jpg",
+      "videoUrl": "",
+      "aspectRatio": "16:9 Widescreen",
+      "tags": [
+        "Broadcast Commercial",
+        "3D Motion",
+        "Color Grading",
+        "Sound Mix"
+      ],
+      "logBeforeImage": "/images/tech-analysis-showcase-1.jpg",
+      "gradeAfterImage": "/images/tech-analysis-showcase-1.jpg",
+      "status": "published",
+      "order": 2,
+      "recentVideos": [
+        {
+          "id": "sr-1",
+          "title": "High-Retention Brand Hook Reel",
+          "client": "Velocity Global",
+          "duration": "00:32",
+          "thumbnail": "/images/brand-showcase-1.jpg",
+          "videoUrl": "",
+          "aspectRatio": "9:16",
+          "date": "2026"
+        },
+        {
+          "id": "sr-2",
+          "title": "Viral Founder Story Edit",
+          "client": "Kash Global",
+          "duration": "00:48",
+          "thumbnail": "/images/tech-analysis-showcase-1.jpg",
+          "videoUrl": "",
+          "aspectRatio": "9:16",
+          "date": "2026"
+        },
+        {
+          "id": "sr-3",
+          "title": "Fast-Cut Event Teaser Reel",
+          "client": "Pulse Collective",
+          "duration": "00:26",
+          "thumbnail": "/images/video-showcase-1.jpg",
+          "videoUrl": "",
+          "aspectRatio": "9:16",
+          "date": "2026"
+        },
+        {
+          "id": "sr-4",
+          "title": "Product Drop Kinetic Short",
+          "client": "Kroma Labs",
+          "duration": "00:38",
+          "thumbnail": "/images/reference-folioblox.png",
+          "videoUrl": "",
+          "aspectRatio": "9:16",
+          "date": "2026"
+        }
+      ]
+    }
+  ],
+  "tradingCategories": [
+    {
+      "id": "cat-gbp-usd",
+      "slug": "gbp-usd",
+      "name": "GBP/USD",
+      "market": "Forex",
+      "focusAsset": "GBP/USD",
+      "weeklyHigh": "1.2785",
+      "spread": "0.4 Pips",
+      "strategy": "Dec Edge // 4H Inducement, Liquidity Sweep & Volume POC",
+      "description": "Deconstructing GBP/USD across Weekly, Daily, and 4H timeframes. Identifying predatory liquidity sweeps beneath or above key highs/lows, protected order blocks, and 4H inducement, entering on 15m order blocks with volume profile POC targeting systematic 1:5 RR.",
+      "coverImage": "/images/tech-analysis-showcase-1.jpg",
+      "status": "published",
+      "order": 0
+    },
+    {
+      "id": "cat-btc-usdt",
+      "slug": "btc-usdt",
+      "name": "BTC/USDT",
+      "market": "Crypto",
+      "focusAsset": "BTC/USDT",
+      "weeklyHigh": "$68,400",
+      "spread": "$1.50",
+      "strategy": "Wyckoff Spring & Asian Range Liquidity Sweep",
+      "description": "Tracking predatory liquidity sweeps beneath prior weekly lows on Bitcoin. Delta volume absorption confirmation at institutional order blocks with tight stop loss below manipulation wicks.",
+      "coverImage": "/images/tech-analysis-showcase-1.jpg",
+      "status": "published",
+      "order": 1
+    },
+    {
+      "id": "cat-eur-usd",
+      "slug": "eur-usd",
+      "name": "EUR/USD",
+      "market": "Forex",
+      "focusAsset": "EUR/USD",
+      "weeklyHigh": "1.0855",
+      "spread": "0.2 Pips",
+      "strategy": "Judas Swing Manipulation into London Open Breaker Block",
+      "description": "London open engineered liquidity above Asian consolidation before sharp rejection. Executing re-tests of mitigation blocks targeting Federal Reserve session imbalance.",
+      "coverImage": "/images/tech-analysis-showcase-1.jpg",
+      "status": "published",
+      "order": 2
+    }
+  ],
+  "tradeRecords": [
+    {
+      "id": "trade-gbpusd-01",
+      "categorySlug": "gbp-usd",
+      "ticker": "GBP/USD",
+      "title": "Weekly High Liquidity Sweep into 4H Inducement",
+      "date": "2026-10-24",
+      "timeframe": "Weekly • Daily • 4H • 15m",
+      "strategy": "Dec Edge",
+      "setupType": "Liquidity Sweep",
+      "riskReward": "1 : 5.0",
+      "outcome": "Target 1:5 RR Hit (+125 Pips)",
+      "pnlPercentage": "+1 : 5.0 RR",
+      "entryPrice": "1.2720",
+      "exitPrice": "1.2535",
+      "stopLoss": "1.2755",
+      "takeProfit": "1.2535",
+      "chartImage": "/images/tech-analysis-showcase-1.jpg",
+      "description": "Price swept the prior London high before tapping into the protected 4H order block. Confirmed high-volume absorption on the 15m timeframe at Point of Control (POC).",
+      "analysisNotes": [
+        "Weekly Bias: Strong Bearish Order Flow",
+        "Liquidity Sweep above 1.2780 confirmed retail inducement",
+        "Volume POC tested at 1.2740 with instant rejection wick",
+        "Clean 1:5 RR target delivered within 36 hours"
+      ],
+      "status": "published",
+      "order": 0
+    },
+    {
+      "id": "trade-btcusdt-01",
+      "categorySlug": "btc-usdt",
+      "ticker": "BTC/USDT",
+      "title": "Wyckoff Spring & Asian Range Liquidity Absorption",
+      "date": "2026-10-22",
+      "timeframe": "4H • Daily Macro",
+      "strategy": "Wyckoff Spring",
+      "setupType": "Liquidity Sweep",
+      "riskReward": "1 : 4.6",
+      "outcome": "Target 2 Smashed (+14.8% Spot, +74% 5x Margin)",
+      "pnlPercentage": "+74.2%",
+      "entryPrice": "62,300",
+      "exitPrice": "68,350",
+      "stopLoss": "61,900",
+      "takeProfit": "68,350",
+      "chartImage": "/images/tech-analysis-showcase-1.jpg",
+      "description": "Identified predatory liquidity sweep beneath prior weekly lows ($62,400). As retail stops were absorbed by limit buyers, aggressive market orders confirmed delta absorption.",
+      "analysisNotes": [
+        "Aggressive bid-ask delta divergence on cluster footprint",
+        "Stop strictly protected below manipulation wick at $61,900"
+      ],
+      "status": "published",
+      "order": 0
+    },
+    {
+      "id": "trade-eurusd-01",
+      "categorySlug": "eur-usd",
+      "ticker": "EUR/USD",
+      "title": "Judas Swing Manipulation into London Open Breaker",
+      "date": "2026-10-20",
+      "timeframe": "1H London Session",
+      "strategy": "London Open Breaker",
+      "setupType": "Order Block (OB)",
+      "riskReward": "1 : 3.8",
+      "outcome": "Clean 72 Pip Delivery to Daily Lows",
+      "pnlPercentage": "+18.4%",
+      "entryPrice": "1.0848",
+      "exitPrice": "1.0768",
+      "stopLoss": "1.0869",
+      "takeProfit": "1.0768",
+      "chartImage": "/images/tech-analysis-showcase-1.jpg",
+      "description": "London open engineered liquidity above Asian consolidation before rapidly violently rejecting. Shorted the re-test of the mitigation block.",
+      "analysisNotes": [
+        "DXY correlated inversion confirmed euro weakness",
+        "Precision exit at the Federal Reserve imbalance zone"
+      ],
+      "status": "published",
+      "order": 0
+    },
+    {
+      "id": "trade-gbpusd-02",
+      "categorySlug": "gbp-usd",
+      "ticker": "GBP/USD",
+      "title": "London Session Order Block Retest & Expansion",
+      "date": "2026-10-18",
+      "timeframe": "4H • 15m",
+      "strategy": "Order Block (OB)",
+      "setupType": "Order Block (OB)",
+      "riskReward": "1 : 5.2",
+      "outcome": "Full Take Profit Achieved (+104 Pips)",
+      "pnlPercentage": "+1 : 5.2 RR",
+      "entryPrice": "1.2650",
+      "exitPrice": "1.2754",
+      "stopLoss": "1.2630",
+      "takeProfit": "1.2754",
+      "chartImage": "/images/tech-analysis-showcase-1.jpg",
+      "description": "Asian range consolidation was swept into the 4H bullish order block. Entered on the 15m retest with protected stop loss.",
+      "analysisNotes": [
+        "Clean mitigation of untraded 4H demand zone",
+        "Tight 20-pip stop giving 1:5.2 asymmetric payout"
+      ],
+      "status": "published",
+      "order": 1
+    },
+    {
+      "id": "trade-btcusdt-02",
+      "categorySlug": "btc-usdt",
+      "ticker": "BTC/USDT",
+      "title": "Daily S/R Flip & Bullish FVG Mitigation",
+      "date": "2026-10-15",
+      "timeframe": "Daily • 4H",
+      "strategy": "Order Block",
+      "setupType": "Order Block (OB)",
+      "riskReward": "1 : 4.0",
+      "outcome": "Full Delivery (+11.2% Spot)",
+      "pnlPercentage": "+56.0%",
+      "entryPrice": "64,200",
+      "exitPrice": "68,000",
+      "stopLoss": "63,250",
+      "takeProfit": "68,000",
+      "chartImage": "/images/tech-analysis-showcase-1.jpg",
+      "description": "Break of structure followed by standard mitigation of previous weekly resistance flipped into support.",
+      "analysisNotes": [
+        "Clean structural shift on high spot volume"
+      ],
+      "status": "published",
+      "order": 1
+    },
+    {
+      "id": "trade-eurusd-02",
+      "categorySlug": "eur-usd",
+      "ticker": "EUR/USD",
+      "title": "ECB Rate Decision Discount Block Rebound",
+      "date": "2026-10-08",
+      "timeframe": "4H • 30m",
+      "strategy": "Discount Demand",
+      "setupType": "Liquidity Sweep",
+      "riskReward": "1 : 4.2",
+      "outcome": "Target Hit (+84 Pips)",
+      "pnlPercentage": "+21.0%",
+      "entryPrice": "1.0745",
+      "exitPrice": "1.0830",
+      "stopLoss": "1.0725",
+      "takeProfit": "1.0830",
+      "chartImage": "/images/tech-analysis-showcase-1.jpg",
+      "description": "Post-announcement volatility wick swept equal lows into the 4H discount demand block.",
+      "analysisNotes": [
+        "Immediate V-shape reaction confirmed smart money entry"
+      ],
+      "status": "published",
+      "order": 1
+    },
+    {
+      "id": "trade-gbpusd-03",
+      "categorySlug": "gbp-usd",
+      "ticker": "GBP/USD",
+      "title": "Fair Value Gap (FVG) Fill & NY Session Reversal",
+      "date": "2026-10-12",
+      "timeframe": "Daily • 1H • 5m",
+      "strategy": "Dec Edge FVG",
+      "setupType": "Fair Value Gap (FVG)",
+      "riskReward": "1 : 4.8",
+      "outcome": "Target Reached (+96 Pips)",
+      "pnlPercentage": "+1 : 4.8 RR",
+      "entryPrice": "1.2580",
+      "exitPrice": "1.2676",
+      "stopLoss": "1.2560",
+      "takeProfit": "1.2676",
+      "chartImage": "/images/tech-analysis-showcase-1.jpg",
+      "description": "NY open news spike mitigated the 1H imbalance before printing an engulfing rejection candle.",
+      "analysisNotes": [
+        "Institutional imbalance filled with zero slippage",
+        "Volume spike confirmed smart money participation"
+      ],
+      "status": "published",
+      "order": 2
+    },
+    {
+      "id": "trade-1794059138083",
+      "categorySlug": "gbp-usd",
+      "ticker": "GBP/USD",
+      "title": "Institutional Order Block Execution on GBP/USD",
+      "date": "2026-11-07",
+      "timeframe": "4H • 15m",
+      "strategy": "Dec Edge",
+      "setupType": "Order Block (OB)",
+      "riskReward": "1 : 5.0",
+      "outcome": "Target Hit (+100 Pips)",
+      "pnlPercentage": "+1 : 5.0 RR",
+      "entryPrice": "1.2650",
+      "exitPrice": "1.2750",
+      "stopLoss": "1.2630",
+      "takeProfit": "1.2750",
+      "chartImage": "/images/tech-analysis-showcase-1.jpg",
+      "description": "Predatory liquidity sweep mitigated into protected order block with POC confluence.",
+      "analysisNotes": [
+        "Volume POC absorbed",
+        "Clean 1:5 delivery"
+      ],
+      "status": "published",
+      "order": 7
+    }
+  ],
+  "siteSections": [
+    {
+      "id": "hero",
+      "label": "Cinematic Hero",
+      "visible": true,
+      "order": 0
+    },
+    {
+      "id": "brand-design",
+      "label": "Brand Design",
+      "visible": true,
+      "order": 1
+    },
+    {
+      "id": "video-editing",
+      "label": "Video Editing",
+      "visible": true,
+      "order": 2
+    },
+    {
+      "id": "technical-analysis",
+      "label": "Technical Analysis",
+      "visible": true,
+      "order": 3
+    },
+    {
+      "id": "workflow",
+      "label": "Creative Workflow",
+      "visible": true,
+      "order": 4
+    },
+    {
+      "id": "about",
+      "label": "Studio Statement & About",
+      "visible": true,
+      "order": 5
+    },
+    {
+      "id": "contact",
+      "label": "Inquiry & Contact",
+      "visible": true,
+      "order": 6
+    }
+  ],
+  "lastPublishedAt": "2026-11-21T10:31:33.182Z",
+  "lastSavedAt": "2026-11-21T10:31:33.182Z"
+}
