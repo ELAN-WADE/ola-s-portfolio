@@ -15,6 +15,8 @@ import {
   INITIAL_TRADING_CATEGORIES,
   INITIAL_TRADE_RECORDS,
   INITIAL_SITE_SECTIONS,
+  INITIAL_SITE_CONTENT,
+  mergeSiteContent,
 } from '../data/initialCmsData';
 
 const DEFAULT_DATABASE: CMSDatabase = {
@@ -24,6 +26,7 @@ const DEFAULT_DATABASE: CMSDatabase = {
   tradingCategories: INITIAL_TRADING_CATEGORIES,
   tradeRecords: INITIAL_TRADE_RECORDS,
   siteSections: INITIAL_SITE_SECTIONS,
+  siteContent: INITIAL_SITE_CONTENT,
 };
 
 interface CMSContextType {
@@ -108,7 +111,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const res = await fetch(url, { headers });
       if (res.ok) {
         const data = (await res.json()) as CMSDatabase;
-        setDatabase(data);
+        setDatabase({ ...data, siteContent: mergeSiteContent(data.siteContent) });
       }
     } catch (err) {
       console.error('[CMS Context] Failed to fetch content:', err);
@@ -166,7 +169,10 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (res.ok) {
         const data = await res.json();
         if (data.database) {
-          setDatabase(data.database);
+          setDatabase({
+            ...data.database,
+            siteContent: mergeSiteContent(data.database.siteContent),
+          });
         }
         return true;
       }
@@ -194,7 +200,10 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (res.ok) {
         const data = await res.json();
         if (data.database) {
-          setDatabase(data.database);
+          setDatabase({
+            ...data.database,
+            siteContent: mergeSiteContent(data.database.siteContent),
+          });
         }
         return true;
       }
@@ -225,7 +234,10 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (res.ok) {
         const data = await res.json();
         if (data.database) {
-          setDatabase(data.database);
+          setDatabase({
+            ...data.database,
+            siteContent: mergeSiteContent(data.database.siteContent),
+          });
         }
         return true;
       }
@@ -269,7 +281,10 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (res.ok) {
         const data = await res.json();
         if (data.database) {
-          setDatabase(data.database);
+          setDatabase({
+            ...data.database,
+            siteContent: mergeSiteContent(data.database.siteContent),
+          });
         }
         return true;
       }

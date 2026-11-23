@@ -10,6 +10,7 @@ import {
   Clock,
 } from 'lucide-react';
 import { useCMS } from '../context/CMSContext';
+import { INITIAL_SITE_CONTENT } from '../data/initialCmsData';
 import type { VideoProject, VideoGridItem } from '../types';
 
 type ResolvedMedia =
@@ -81,6 +82,7 @@ function getSectionVideos(section: VideoProject): VideoGridItem[] {
 
 export const VideoEditingSection: React.FC = () => {
   const { database, setSelectedComponentId, isAdmin } = useCMS();
+  const headers = database.siteContent?.sectionHeaders || INITIAL_SITE_CONTENT.sectionHeaders;
   const videoSections = database.videoProjects;
 
   // Expanded section ID: tapping a section opens the 4-column grid right underneath it
@@ -165,11 +167,11 @@ export const VideoEditingSection: React.FC = () => {
             <div className="flex items-center gap-2 mb-2">
               <span className="h-1.5 w-1.5 rounded-full bg-zinc-400" />
               <span className="text-xs font-mono uppercase tracking-widest text-zinc-400">
-                Discipline 02
+                {headers.videoEyebrow}
               </span>
             </div>
             <h2 className="font-display font-bold text-2xl sm:text-3xl md:text-4xl text-zinc-100 tracking-tight leading-[1.12]">
-              VIDEO EDITING &amp; MOTION
+              {headers.videoTitle}
             </h2>
           </div>
 

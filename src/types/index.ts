@@ -165,6 +165,86 @@ export interface SiteSectionConfig {
   order: number;
 }
 
+export interface AboutPillar {
+  title: string;
+  description: string;
+  icon: 'Zap' | 'Award' | 'Compass' | 'Shield';
+}
+
+export interface SocialLinkItem {
+  name: string;
+  url: string;
+}
+
+export interface SiteContentConfig {
+  branding: {
+    logoImage: string;
+    logoAlt: string;
+    navCtaLabel: string;
+    mobileFooterLeft: string;
+    mobileFooterRight: string;
+  };
+  sectionHeaders: {
+    brandEyebrow: string;
+    brandTitle: string;
+    brandTabLogos: string;
+    brandTabSocial: string;
+    brandTabFlyers: string;
+    videoEyebrow: string;
+    videoTitle: string;
+    analysisEyebrow: string;
+    analysisTitle: string;
+    analysisSubtitle: string;
+  };
+  workflow: {
+    eyebrow: string;
+    heading: string;
+    description: string;
+    steps: WorkflowStep[];
+  };
+  about: {
+    image: string;
+    imageAlt: string;
+    studioBaseLabel: string;
+    studioBaseValue: string;
+    availabilityBadge: string;
+    eyebrow: string;
+    heading: string;
+    paragraph1: string;
+    paragraph2: string;
+    highlightPhrase: string;
+    pillars: AboutPillar[];
+    environmentLabel: string;
+    tools: string[];
+  };
+  contact: {
+    eyebrow: string;
+    heading: string;
+    description: string;
+    inquiriesLabel: string;
+    email: string;
+    socialsLabel: string;
+    socials: SocialLinkItem[];
+    disciplines: string[];
+    budgetOptions: string[];
+    submitLabel: string;
+    successTitle: string;
+    successMessage: string;
+  };
+  footer: {
+    studioName: string;
+    disciplinesLine: string;
+    statusLabel: string;
+    statusValue: string;
+    recognitionLabel: string;
+    recognitionValue: string;
+    architectureLabel: string;
+    architectureValue: string;
+    copyright: string;
+    tagline: string;
+  };
+}
+
 export interface CMSDatabase {
   heroConfig: HeroConfig;
   brandProjects: BrandProject[];
@@ -172,6 +252,7 @@ export interface CMSDatabase {
   tradingCategories: TradingCategory[];
   tradeRecords: TradeRecord[];
   siteSections: SiteSectionConfig[];
+  siteContent?: SiteContentConfig;
   lastPublishedAt?: string;
   lastSavedAt?: string;
 }

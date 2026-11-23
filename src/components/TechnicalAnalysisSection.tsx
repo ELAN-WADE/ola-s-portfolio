@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Activity, ArrowUpRight, TrendingUp, BarChart2 } from 'lucide-react';
 import { useCMS } from '../context/CMSContext';
+import { INITIAL_SITE_CONTENT } from '../data/initialCmsData';
 import { TradingCategory } from '../types';
 
 export const TechnicalAnalysisSection: React.FC = () => {
   const { database, setSelectedComponentId, isAdmin } = useCMS();
+  const headers = database.siteContent?.sectionHeaders || INITIAL_SITE_CONTENT.sectionHeaders;
   const tradingCategories = database.tradingCategories;
   const tradeRecords = database.tradeRecords;
 
@@ -17,7 +19,7 @@ export const TechnicalAnalysisSection: React.FC = () => {
     tradingCategories.find((c) => c.slug === selectedSlug) || tradingCategories[0];
 
   const categoryTrades = tradeRecords.filter(
-    (t) => t.categorySlug === (activeCategory?.slug || 'gbp-usd')
+    (t) => t.categorySlug === (activeCategory?.slug || 'gbp-usd') && t.status === 'published'
   );
 
   return (
@@ -32,16 +34,16 @@ export const TechnicalAnalysisSection: React.FC = () => {
             <div className="flex items-center gap-2 mb-2">
               <span className="h-1.5 w-1.5 rounded-full bg-zinc-400" />
               <span className="text-xs font-mono uppercase tracking-widest text-zinc-400">
-                Discipline 03
+                {headers.analysisEyebrow}
               </span>
             </div>
             <h2 className="font-display font-bold text-2xl sm:text-3xl md:text-4xl text-zinc-100 tracking-tight leading-[1.12]">
-              TECHNICAL ANALYSIS &amp; ORDER FLOW
+              {headers.analysisTitle}
             </h2>
           </div>
 
           <div className="text-xs font-mono text-zinc-500">
-            GBP/USD • BTC/USDT • EUR/USD Specialization
+            {headers.analysisSubtitle}
           </div>
         </div>
 
@@ -49,7 +51,9 @@ export const TechnicalAnalysisSection: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {tradingCategories.map((cat) => {
             const isSelected = cat.slug === activeCategory?.slug;
-            const tradesCount = tradeRecords.filter((t) => t.categorySlug === cat.slug).length;
+            const tradesCount = tradeRecords.filter(
+              (t) => t.categorySlug === cat.slug && t.status === 'published'
+            ).length;
             const catRoute = `/portfolio/technical-analysis/${cat.slug}`;
 
             return (

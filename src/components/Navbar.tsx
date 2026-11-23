@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ArrowUpRight, Menu, X, Shield } from 'lucide-react';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { useCMS } from '../context/CMSContext';
+import { INITIAL_SITE_CONTENT } from '../data/initialCmsData';
 
 const NAV_ITEMS = [
   { id: 'hero', label: 'Home' },
@@ -17,7 +18,8 @@ export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAdmin } = useCMS();
+  const { database } = useCMS();
+  const branding = database.siteContent?.branding || INITIAL_SITE_CONTENT.branding;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,8 +69,8 @@ export const Navbar: React.FC = () => {
             className="group relative inline-flex items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 active:scale-[0.97] transition-transform duration-150"
           >
             <img
-              src="/images/ods-logo.png"
-              alt="ODS Logo"
+              src={branding.logoImage || '/images/ods-logo.png'}
+              alt={branding.logoAlt || 'ODS Logo'}
               className="w-9 h-9 md:w-10 md:h-10 object-contain rounded-full border border-white/15 group-hover:border-zinc-400 transition-colors duration-200"
             />
           </Link>
@@ -92,21 +94,11 @@ export const Navbar: React.FC = () => {
 
           {/* Right Action Controls */}
           <div className="flex items-center gap-3">
-            {/* Visual CMS Access Control Button */}
-            <Link
-              to="/admin"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-zinc-400 hover:text-white text-xs font-mono border border-white/10 transition-colors"
-              title="Open Editorial CMS"
-            >
-              <Shield className="w-3.5 h-3.5 text-zinc-400" />
-              <span>{isAdmin ? 'CMS Active' : 'CMS'}</span>
-            </Link>
-
             <button
               onClick={() => scrollToSection('contact')}
               className="group relative inline-flex items-center gap-2.5 pl-4 pr-2 py-1.5 rounded-full bg-zinc-100 text-zinc-950 text-xs md:text-[13px] font-semibold tracking-tight hover:bg-white active:scale-[0.97] transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
             >
-              <span>Get in touch</span>
+              <span>{branding.navCtaLabel || 'Get in touch'}</span>
               <span className="w-6 h-6 rounded-full bg-zinc-900 text-zinc-100 flex items-center justify-center transition-transform duration-200 group-hover:translate-x-0.5">
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </span>
@@ -141,26 +133,18 @@ export const Navbar: React.FC = () => {
                 {item.label}
               </button>
             ))}
-            <Link
-              to="/admin"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-lg font-mono text-left text-zinc-400 hover:text-white flex items-center gap-2 py-1"
-            >
-              <Shield className="w-4 h-4 text-zinc-400" />
-              <span>Editorial CMS</span>
-            </Link>
             <button
               onClick={() => scrollToSection('contact')}
               className="text-xl font-display font-bold text-left text-white pt-2 border-t border-white/[0.08] flex items-center justify-between"
             >
-              <span>Get in touch</span>
+              <span>{branding.navCtaLabel || 'Get in touch'}</span>
               <ArrowUpRight className="w-5 h-5 text-zinc-400" />
             </button>
           </nav>
 
           <div className="pt-6 border-t border-white/[0.08] flex items-center justify-between text-[11px] font-mono text-zinc-500">
-            <span>© 2026 ODS</span>
-            <span>LAGOS / LONDON</span>
+            <span>{branding.mobileFooterLeft}</span>
+            <span>{branding.mobileFooterRight}</span>
           </div>
         </div>
       )}

@@ -5,6 +5,7 @@ import type {
   TradingCategory,
   TradeRecord,
   SiteSectionConfig,
+  SiteContentConfig,
 } from '../types';
 
 export const INITIAL_HERO_CONFIG: HeroConfig = {
@@ -984,4 +985,217 @@ export const INITIAL_SITE_SECTIONS: SiteSectionConfig[] = [
   { id: 'about', label: 'Studio Statement & About', visible: true, order: 5 },
   { id: 'contact', label: 'Inquiry & Contact', visible: true, order: 6 },
 ];
+
+export const INITIAL_SITE_CONTENT: SiteContentConfig = {
+  branding: {
+    logoImage: '/images/ods-logo.png',
+    logoAlt: 'ODS Logo',
+    navCtaLabel: 'Get in touch',
+    mobileFooterLeft: '© 2026 ODS',
+    mobileFooterRight: 'LAGOS / LONDON',
+  },
+  sectionHeaders: {
+    brandEyebrow: 'Discipline 01',
+    brandTitle: 'BRAND DESIGN & VISUAL SYSTEMS',
+    brandTabLogos: 'Brand Logos',
+    brandTabSocial: 'Social Media',
+    brandTabFlyers: 'Flyers',
+    videoEyebrow: 'Discipline 02',
+    videoTitle: 'VIDEO EDITING & MOTION',
+    analysisEyebrow: 'Discipline 03',
+    analysisTitle: 'TECHNICAL ANALYSIS & ORDER FLOW',
+    analysisSubtitle: 'GBP/USD • BTC/USDT • EUR/USD Specialization',
+  },
+  workflow: {
+    eyebrow: 'The Architecture of Creation',
+    heading: 'SYSTEMATIZED CREATIVE WORKFLOW',
+    description:
+      "Great creative direction isn't serendipity; it's an engineering discipline. Every brand system, commercial frame, and analytical thesis moves through four structured phases.",
+    steps: [
+      {
+        number: '01',
+        title: 'Deconstruction & Alpha Discovery',
+        subtitle: 'Research, Market Diagnostics & Core Strategy',
+        description:
+          'Every project begins by interrogating assumptions. Whether auditing brand positioning, analyzing raw video rushes, or mapping liquidity order flows, we uncover the non-obvious leverage points.',
+        deliverables: [
+          'Positioning Map',
+          'Creative Brief & Storyboard',
+          'Macro Market Thesis',
+          'Visual Moodboard',
+        ],
+        tools: ['Figma', 'Miro', 'TradingView', 'Python / Jupyter'],
+        icon: 'Search',
+      },
+      {
+        number: '02',
+        title: 'Architectural Prototyping',
+        subtitle: 'System Design, Rough Cuts & Algorithmic Setups',
+        description:
+          'Translating strategy into concrete artifacts. We build vector systems with mathematical proportions, assemble rapid rhythm cuts with beat synchronization, and define exact invalidation levels.',
+        deliverables: [
+          'Identity Prototypes',
+          'Rough Assembly Cut',
+          'Risk-Calculated Orders',
+          'Component Library',
+        ],
+        tools: ['Illustrator', 'Premiere Pro', 'DaVinci Resolve', 'PineScript'],
+        icon: 'Layers',
+      },
+      {
+        number: '03',
+        title: 'Cinematic Refinement & Grade',
+        subtitle: 'Audio Mixing, DaVinci Color Science & Typography Polish',
+        description:
+          'Where good becomes unforgettable. We perform micro-kerning, apply bespoke film print emulations, layer multi-track tactile sound effects, and confirm delta volume absorption.',
+        deliverables: [
+          'Color-Graded Master',
+          'Final Spatial Sound Mix',
+          'Full Brand Guidelines',
+          'Trade Execution Logs',
+        ],
+        tools: ['DaVinci Resolve Studio', 'Ableton Live', 'After Effects', 'Colorlab AI'],
+        icon: 'Sliders',
+      },
+      {
+        number: '04',
+        title: 'Deployment & Scaling',
+        subtitle: 'Production Handoff, Multi-Channel Launch & Performance',
+        description:
+          'Flawless production delivery across digital, print, and financial vectors. We ensure high-performance web optimization, ProRes master archival, and live position risk management.',
+        deliverables: [
+          '4K ProRes Masters',
+          'Production Vector Assets',
+          'Post-Launch Analytics',
+          'Risk Management Reports',
+        ],
+        tools: ['Vite / Next.js', 'GitHub', 'ProRes HQ', 'Telegram Alpha Channel'],
+        icon: 'Rocket',
+      },
+    ],
+  },
+  about: {
+    image: '/images/ods-logo.png',
+    imageAlt: 'Olar Design Studio Emblem',
+    studioBaseLabel: 'Studio Base',
+    studioBaseValue: 'Lagos & London (GMT+1)',
+    availabilityBadge: 'AVAILABLE FOR Q4',
+    eyebrow: 'About The Studio',
+    heading: 'AT THE INTERSECTION OF AESTHETICS & ACCURACY',
+    paragraph1:
+      "Most designers lack commercial rhythm; most video editors ignore design hierarchy; and most financial analysts can't visualize a single line of data cleanly.",
+    paragraph2:
+      'Olar Design Studio operates across all three. Whether building high-conviction brand architecture from scratch, cutting commercial reels, or deconstructing institutional market structure with quantitative precision, the principle remains constant:',
+    highlightPhrase: 'clarity is authority',
+    pillars: [
+      {
+        title: 'Logo Branding',
+        description: 'Monolithic vector emblems & brand guidelines that command authority.',
+        icon: 'Zap',
+      },
+      {
+        title: 'Social & Flyers',
+        description:
+          'High-retention social carousels and print/digital event flyers built to convert.',
+        icon: 'Award',
+      },
+      {
+        title: 'Cinematic Video',
+        description: 'Surgical pacing and DaVinci Resolve color science with narrative precision.',
+        icon: 'Compass',
+      },
+      {
+        title: 'Dec Edge Alpha',
+        description:
+          'GBP/USD order flow, predatory liquidity sweeps, and protected OBs with 1:5 RR.',
+        icon: 'Shield',
+      },
+    ],
+    environmentLabel: 'Production Environment',
+    tools: [
+      'DaVinci Resolve Studio',
+      'Figma',
+      'Adobe Creative Cloud',
+      'TradingView Pro',
+      'Python / Quant',
+      'Blender 3D',
+      'Ableton Live',
+      'React / TypeScript',
+    ],
+  },
+  contact: {
+    eyebrow: 'Initiate Partnership',
+    heading: "LET'S BUILD SOMETHING ICONIC.",
+    description:
+      'Accepting select commissions for Logo Branding, Social Media Design, Event Flyers, Cinematic Video Editing, and Quantitative Market Visuals.',
+    inquiriesLabel: 'Direct Inquiries',
+    email: 'hello@oladesigns.com',
+    socialsLabel: 'Digital Presence & Portals',
+    socials: [
+      { name: 'X / Twitter', url: '#contact' },
+      { name: 'YouTube Channel', url: '#contact' },
+      { name: 'TradingView', url: '#contact' },
+      { name: 'Instagram', url: '#contact' },
+      { name: 'GitHub', url: '#contact' },
+    ],
+    disciplines: [
+      'Logo Branding',
+      'Social Media Design',
+      'Flyers',
+      'Video Editing',
+      'Technical Analysis',
+      'Full Direction',
+    ],
+    budgetOptions: [
+      '< $5,000 (Advisory / Retainer)',
+      '$5,000 - $15,000 (Complete Brand System / Commercial Cut)',
+      '$15,000 - $35,000 (Comprehensive Brand + Motion Overhaul)',
+      '$35,000+ (Enterprise / Global Launch / Proprietary Alpha)',
+    ],
+    submitLabel: 'Transmit Project Brief',
+    successTitle: 'Transmission Received',
+    successMessage:
+      'Thank you for reaching out. Briefs are reviewed daily and answered within 24 hours.',
+  },
+  footer: {
+    studioName: 'Olar Design Studio',
+    disciplinesLine:
+      'Logo Branding • Social Media Design • Flyers • Video Editing • Technical Analysis',
+    statusLabel: 'Status',
+    statusValue: 'Available for Commissions',
+    recognitionLabel: 'Recognition',
+    recognitionValue: 'Editorial & Brand Direction',
+    architectureLabel: 'Architecture',
+    architectureValue: 'ODS Studio Archive • Drive Sync',
+    copyright: '© 2026 Olar Design Studio (ODS). All rights reserved.',
+    tagline: 'Intentional brand systems, motion & market structure.',
+  },
+};
+
+export function mergeSiteContent(partial?: Partial<SiteContentConfig>): SiteContentConfig {
+  if (!partial) return INITIAL_SITE_CONTENT;
+  return {
+    branding: { ...INITIAL_SITE_CONTENT.branding, ...(partial.branding || {}) },
+    sectionHeaders: { ...INITIAL_SITE_CONTENT.sectionHeaders, ...(partial.sectionHeaders || {}) },
+    workflow: {
+      ...INITIAL_SITE_CONTENT.workflow,
+      ...(partial.workflow || {}),
+      steps: partial.workflow?.steps || INITIAL_SITE_CONTENT.workflow.steps,
+    },
+    about: {
+      ...INITIAL_SITE_CONTENT.about,
+      ...(partial.about || {}),
+      pillars: partial.about?.pillars || INITIAL_SITE_CONTENT.about.pillars,
+      tools: partial.about?.tools || INITIAL_SITE_CONTENT.about.tools,
+    },
+    contact: {
+      ...INITIAL_SITE_CONTENT.contact,
+      ...(partial.contact || {}),
+      socials: partial.contact?.socials || INITIAL_SITE_CONTENT.contact.socials,
+      disciplines: partial.contact?.disciplines || INITIAL_SITE_CONTENT.contact.disciplines,
+      budgetOptions: partial.contact?.budgetOptions || INITIAL_SITE_CONTENT.contact.budgetOptions,
+    },
+    footer: { ...INITIAL_SITE_CONTENT.footer, ...(partial.footer || {}) },
+  };
+}
 

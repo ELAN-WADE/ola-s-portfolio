@@ -22,6 +22,8 @@ import {
   INITIAL_TRADING_CATEGORIES,
   INITIAL_TRADE_RECORDS,
   INITIAL_SITE_SECTIONS,
+  INITIAL_SITE_CONTENT,
+  mergeSiteContent,
 } from '../src/data/initialCmsData';
 
 export {
@@ -31,6 +33,7 @@ export {
   INITIAL_TRADING_CATEGORIES,
   INITIAL_TRADE_RECORDS,
   INITIAL_SITE_SECTIONS,
+  INITIAL_SITE_CONTENT,
 };
 
 export class CMSManager {
@@ -67,6 +70,7 @@ export class CMSManager {
           tradingCategories: parsed.tradingCategories || INITIAL_TRADING_CATEGORIES,
           tradeRecords: parsed.tradeRecords || INITIAL_TRADE_RECORDS,
           siteSections: parsed.siteSections || INITIAL_SITE_SECTIONS,
+          siteContent: mergeSiteContent(parsed.siteContent),
           lastPublishedAt: parsed.lastPublishedAt || new Date().toISOString(),
           lastSavedAt: parsed.lastSavedAt || new Date().toISOString(),
         };
@@ -82,6 +86,7 @@ export class CMSManager {
       tradingCategories: INITIAL_TRADING_CATEGORIES,
       tradeRecords: INITIAL_TRADE_RECORDS,
       siteSections: INITIAL_SITE_SECTIONS,
+      siteContent: INITIAL_SITE_CONTENT,
       lastPublishedAt: new Date().toISOString(),
       lastSavedAt: new Date().toISOString(),
     };
@@ -133,6 +138,7 @@ export class CMSManager {
       siteSections: db.siteSections
         .filter((s) => s.visible)
         .sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
+      siteContent: mergeSiteContent(db.siteContent),
       lastPublishedAt: db.lastPublishedAt,
       lastSavedAt: db.lastSavedAt,
     };
@@ -146,6 +152,7 @@ export class CMSManager {
       tradingCategories: [...this.database.tradingCategories].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
       tradeRecords: [...this.database.tradeRecords].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
       siteSections: [...this.database.siteSections].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
+      siteContent: mergeSiteContent(this.database.siteContent),
       lastPublishedAt: this.database.lastPublishedAt,
       lastSavedAt: this.database.lastSavedAt,
     };
@@ -156,6 +163,9 @@ export class CMSManager {
     const updated: CMSDatabase = {
       ...this.database,
       ...patch,
+      siteContent: patch.siteContent
+        ? mergeSiteContent(patch.siteContent)
+        : mergeSiteContent(this.database.siteContent),
       lastSavedAt: now,
     };
     this.persist(updated);

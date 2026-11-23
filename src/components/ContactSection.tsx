@@ -1,19 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { Copy, Check, Send, ArrowUpRight } from 'lucide-react';
+import { useCMS } from '../context/CMSContext';
+import { INITIAL_SITE_CONTENT } from '../data/initialCmsData';
 
 export const ContactSection: React.FC = () => {
+  const { database, isAdmin, setSelectedComponentId } = useCMS();
+  const contact = database.siteContent?.contact || INITIAL_SITE_CONTENT.contact;
+  const disciplines =
+    contact.disciplines && contact.disciplines.length > 0
+      ? contact.disciplines
+      : INITIAL_SITE_CONTENT.contact.disciplines;
+  const budgetOptions =
+    contact.budgetOptions && contact.budgetOptions.length > 0
+      ? contact.budgetOptions
+      : INITIAL_SITE_CONTENT.contact.budgetOptions;
+
   const [copied, setCopied] = useState(false);
-  const [discipline, setDiscipline] = useState('Logo Branding');
+  const [discipline, setDiscipline] = useState(disciplines[0] || 'Logo Branding');
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    budget: '$5,000 - $15,000',
+    budget: budgetOptions[1] || budgetOptions[0] || '',
     message: '',
   });
 
-  const email = 'hello@oladesigns.com';
+  useEffect(() => {
+    if (!disciplines.includes(discipline) && disciplines[0]) {
+      setDiscipline(disciplines[0]);
+    }
+  }, [disciplines, discipline]);
+
+  const email = contact.email || 'hello@oladesigns.com';
 
   const copyEmail = () => {
     navigator.clipboard.writeText(email);
@@ -39,29 +58,34 @@ export const ContactSection: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="relative w-full py-16 md:py-20 bg-[#070708] overflow-hidden">
+    <section
+      id="contact"
+      onClick={() => {
+        if (isAdmin) setSelectedComponentId('site-contact');
+      }}
+      className="relative w-full py-16 md:py-20 bg-[#070708] overflow-hidden"
+    >
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
           {/* Left Column: Direct Inquiry Trigger */}
           <div className="lg:col-span-5 flex flex-col justify-between">
             <div>
               <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500 block mb-2">
-                Initiate Partnership
+                {contact.eyebrow}
               </span>
 
               <h2 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-zinc-100 tracking-tight leading-[1.02]">
-                LET&rsquo;S BUILD SOMETHING ICONIC.
+                {contact.heading}
               </h2>
 
               <p className="mt-4 text-sm text-zinc-400 font-sans leading-relaxed">
-                Accepting select commissions for Logo Branding, Social Media Design, Event Flyers,
-                Cinematic Video Editing, and Quantitative Market Visuals.
+                {contact.description}
               </p>
 
               {/* Instant Email Copy Button */}
               <div className="mt-7">
                 <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500 block mb-2">
-                  Direct Inquiries
+                  {contact.inquiriesLabel}
                 </span>
                 <button
                   type="button"
@@ -84,29 +108,30 @@ export const ContactSection: React.FC = () => {
             </div>
 
             {/* Social Portals */}
-            <div className="mt-10 pt-6 border-t border-white/[0.08]">
-              <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500 block mb-3">
-                Digital Presence &amp; Portals
-              </span>
-              <div className="flex flex-wrap gap-2.5">
-                {[
-                  { name: 'X / Twitter', url: '#contact' },
-                  { name: 'YouTube Channel', url: '#contact' },
-                  { name: 'TradingView', url: '#contact' },
-                  { name: 'Instagram', url: '#contact' },
-                  { name: 'GitHub', url: '#contact' },
-                ].map((s, i) => (
-                  <a
-                    key={i}
-                    href={s.url}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] text-xs font-mono text-zinc-400 hover:text-zinc-100 hover:border-white/20 transition-colors"
-                  >
-                    <span>{s.name}</span>
-                    <ArrowUpRight className="w-3 h-3 text-zinc-500" />
-                  </a>
-                ))}
+            {contact.socials && contact.socials.length > 0 && (
+              <div className="mt-10 pt-6 border-t border-white/[0.08]">
+                <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500 block mb-3">
+                  {contact.socialsLabel}
+                </span>
+                <div className="flex flex-wrap gap-2.5">
+                  {contact.socials.map((s, i) => {
+                    const isExternal = s.url && /^https?:\/\//i.test(s.url);
+                    return (
+                      <a
+                        key={i}
+                        href={s.url || '#contact'}
+                        target={isExternal ? '_blank' : undefined}
+                        rel={isExternal ? 'noopener noreferrer' : undefined}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] text-xs font-mono text-zinc-400 hover:text-zinc-100 hover:border-white/20 transition-colors"
+                      >
+                        <span>{s.name}</span>
+                        <ArrowUpRight className="w-3 h-3 text-zinc-500" />
+                      </a>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Right Column: Inquiry Form */}
@@ -117,11 +142,10 @@ export const ContactSection: React.FC = () => {
                   <Check className="w-6 h-6" />
                 </div>
                 <h3 className="font-display font-bold text-xl text-zinc-100">
-                  Transmission Received
+                  {contact.successTitle}
                 </h3>
                 <p className="mt-2 text-sm text-zinc-400 max-w-sm mx-auto">
-                  Thank you for reaching out. Briefs are reviewed daily and answered within 24
-                  hours.
+                  {contact.successMessage}
                 </p>
                 <button
                   type="button"
@@ -139,14 +163,7 @@ export const ContactSection: React.FC = () => {
                     Select Discipline Scope
                   </label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {[
-                      'Logo Branding',
-                      'Social Media Design',
-                      'Flyers',
-                      'Video Editing',
-                      'Technical Analysis',
-                      'Full Direction',
-                    ].map((d) => (
+                    {disciplines.map((d) => (
                       <button
                         type="button"
                         key={d}
@@ -215,16 +232,11 @@ export const ContactSection: React.FC = () => {
                     onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
                     className="w-full bg-black/50 border border-white/10 rounded-lg px-3.5 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-zinc-400 transition-colors"
                   >
-                    <option value="< $5,000">&lt; $5,000 (Advisory / Retainer)</option>
-                    <option value="$5,000 - $15,000">
-                      $5,000 - $15,000 (Complete Brand System / Commercial Cut)
-                    </option>
-                    <option value="$15,000 - $35,000">
-                      $15,000 - $35,000 (Comprehensive Brand + Motion Overhaul)
-                    </option>
-                    <option value="$35,000+">
-                      $35,000+ (Enterprise / Global Launch / Proprietary Alpha)
-                    </option>
+                    {budgetOptions.map((opt, idx) => (
+                      <option key={idx} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -252,7 +264,7 @@ export const ContactSection: React.FC = () => {
                   type="submit"
                   className="w-full py-3.5 rounded-xl bg-zinc-100 hover:bg-white text-zinc-950 font-display font-bold text-sm tracking-wide transition-all duration-150 active:scale-[0.99] flex items-center justify-center gap-2 group"
                 >
-                  <span>Transmit Project Brief</span>
+                  <span>{contact.submitLabel}</span>
                   <Send className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                 </button>
               </form>

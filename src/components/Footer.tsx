@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowUp, Award } from 'lucide-react';
+import { useCMS } from '../context/CMSContext';
+import { INITIAL_SITE_CONTENT } from '../data/initialCmsData';
 
 export const Footer: React.FC = () => {
+  const { database, isAdmin, setSelectedComponentId } = useCMS();
+  const branding = database.siteContent?.branding || INITIAL_SITE_CONTENT.branding;
+  const footer = database.siteContent?.footer || INITIAL_SITE_CONTENT.footer;
   const [time, setTime] = useState('');
 
   useEffect(() => {
@@ -26,22 +31,27 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="relative w-full bg-[#050506] border-t border-white/[0.08] py-12 text-zinc-400 font-sans overflow-hidden">
+    <footer
+      onClick={() => {
+        if (isAdmin) setSelectedComponentId('site-footer');
+      }}
+      className="relative w-full bg-[#050506] border-t border-white/[0.08] py-12 text-zinc-400 font-sans overflow-hidden"
+    >
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         {/* Top Tier */}
         <div className="flex flex-col md:flex-row md:items-center justify-between pb-8 border-b border-white/[0.06] gap-6">
           <div className="flex items-center gap-4">
             <img
-              src="/images/ods-logo.png"
-              alt="ODS Logo"
+              src={branding.logoImage || '/images/ods-logo.png'}
+              alt={branding.logoAlt || 'ODS Logo'}
               className="w-11 h-11 object-contain rounded-full border border-white/15"
             />
             <div>
               <span className="font-display font-bold text-2xl md:text-3xl tracking-tight text-zinc-100 block leading-none">
-                Olar Design Studio
+                {footer.studioName}
               </span>
               <span className="text-[11px] font-mono tracking-widest text-zinc-500 uppercase mt-1.5 block">
-                Logo Branding • Social Media Design • Flyers • Video Editing • Technical Analysis
+                {footer.disciplinesLine}
               </span>
             </div>
           </div>
@@ -68,31 +78,31 @@ export const Footer: React.FC = () => {
           </div>
 
           <div>
-            <span className="text-zinc-600 uppercase block mb-1">Status</span>
+            <span className="text-zinc-600 uppercase block mb-1">{footer.statusLabel}</span>
             <span className="text-zinc-300 font-semibold flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
-              Available for Commissions
+              {footer.statusValue}
             </span>
           </div>
 
           <div>
-            <span className="text-zinc-600 uppercase block mb-1">Recognition</span>
+            <span className="text-zinc-600 uppercase block mb-1">{footer.recognitionLabel}</span>
             <span className="text-zinc-300 flex items-center gap-1.5">
               <Award className="w-3.5 h-3.5 text-zinc-400" />
-              Editorial &amp; Brand Direction
+              {footer.recognitionValue}
             </span>
           </div>
 
           <div>
-            <span className="text-zinc-600 uppercase block mb-1">Architecture</span>
-            <span className="text-zinc-400">ODS Studio Archive • Drive Sync</span>
+            <span className="text-zinc-600 uppercase block mb-1">{footer.architectureLabel}</span>
+            <span className="text-zinc-400">{footer.architectureValue}</span>
           </div>
         </div>
 
         {/* Bottom Tier */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono text-zinc-500 gap-3">
-          <p>© 2026 Olar Design Studio (ODS). All rights reserved.</p>
-          <p>Intentional brand systems, motion &amp; market structure.</p>
+          <p>{footer.copyright}</p>
+          <p>{footer.tagline}</p>
         </div>
       </div>
     </footer>

@@ -31,7 +31,21 @@ import { CinematicHero } from '../components/CinematicHero';
 import { BrandDesignSection } from '../components/BrandDesignSection';
 import { VideoEditingSection } from '../components/VideoEditingSection';
 import { TechnicalAnalysisSection } from '../components/TechnicalAnalysisSection';
-import type { BrandProject, VideoProject, VideoGridItem, TradeRecord, TradingCategory } from '../types';
+import { WorkflowSection } from '../components/WorkflowSection';
+import { AboutSection } from '../components/AboutSection';
+import { ContactSection } from '../components/ContactSection';
+import { Footer } from '../components/Footer';
+import { SiteContentEditor } from '../components/cms/SiteContentEditor';
+import { INITIAL_SITE_CONTENT, mergeSiteContent } from '../data/initialCmsData';
+import type {
+  BrandProject,
+  VideoProject,
+  VideoGridItem,
+  TradeRecord,
+  TradingCategory,
+  SiteContentConfig,
+  HeroMetric,
+} from '../types';
 
 const normalizePickerHex = (val: string): string => {
   const clean = (val || '').trim();
@@ -80,6 +94,22 @@ export const AdminCMSPage: React.FC = () => {
 
   // CMS Color Architecture Post Input State
   const [newBrandColor, setNewBrandColor] = useState('#FFFFFF');
+
+  const siteContent = mergeSiteContent(database.siteContent);
+
+  const updateSiteContentSection = <K extends keyof SiteContentConfig>(
+    sectionKey: K,
+    patch: Partial<SiteContentConfig[K]>
+  ) => {
+    const nextSiteContent: SiteContentConfig = {
+      ...siteContent,
+      [sectionKey]: {
+        ...siteContent[sectionKey],
+        ...patch,
+      },
+    };
+    void saveDraft({ siteContent: nextSiteContent });
+  };
 
   // Drag and Drop State
   const [draggedItem, setDraggedItem] = useState<{
@@ -138,7 +168,11 @@ export const AdminCMSPage: React.FC = () => {
         showToast(`Uploaded ${res.filename}`);
         void loadLiveMedia();
         if (uploadTargetField && uploadTargetField !== 'mediaTab' && selectedComponentId) {
-          if (uploadTargetField === 'brandGallery:add' && selectedComponentId.startsWith('brand-')) {
+          if (uploadTargetField === 'siteBranding:logoImage') {
+            updateSiteContentSection('branding', { logoImage: res.url });
+          } else if (uploadTargetField === 'siteAbout:image') {
+            updateSiteContentSection('about', { image: res.url });
+          } else if (uploadTargetField === 'brandGallery:add' && selectedComponentId.startsWith('brand-')) {
             const brandId = selectedComponentId.replace('brand-', '');
             const project = database.brandProjects.find((p) => p.id === brandId);
             if (project) {
@@ -196,6 +230,109 @@ export const AdminCMSPage: React.FC = () => {
     void reorder(collection, orderedIds);
     setDraggedItem(null);
     showToast(`Reordered ${collection}`);
+  };
+
+  // Accurate per-category (and cross-category) drag-and-drop for trade cards
+  const handleDropTrade = (targetCategorySlug: string, targetTradeId: string) => {
+    if (!draggedItem || draggedItem.collection !== 'tradeRecords') return;
+    if (draggedItem.id === targetTradeId) {
+      setDraggedItem(null);
+      return;
+    }
+
+    const draggedTrade = database.tradeRecords.find((t) => t.id === draggedItem.id);
+    if (!draggedTrade) {
+      setDraggedItem(null);
+      return;
+    }
+
+    const targetCategory = database.tradingCategories.find((c) => c.slug === targetCategorySlug);
+    const updatedDragged: TradeRecord = {
+      ...draggedTrade,
+      categorySlug: targetCategorySlug,
+      ticker: targetCategory ? targetCategory.name : draggedTrade.ticker,
+    };
+
+    // Build ordered list for target category
+    const remaining = database.tradeRecords.filter((t) => t.id !== draggedItem.id);
+    const targetCatTrades = remaining
+      .filter((t) => t.categorySlug === targetCategorySlug)
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    const otherTrades = remaining.filter((t) => t.categorySlug !== targetCategorySlug);
+
+    const targetPos = targetCatTrades.findIndex((t) => t.id === targetTradeId);
+    if (targetPos === -1) {
+      targetCatTrades.push(updatedDragged);
+    } else {
+      targetCatTrades.splice(targetPos, 0, updatedDragged);
+    }
+
+    const reindexedTarget = targetCatTrades.map((t, idx) => ({ ...t, order: idx }));
+    void saveDraft({ tradeRecords: [...otherTrades, ...reindexedTarget] });
+    setDraggedItem(null);
+    showToast('Reordered trade gallery');
+  };
+
+  const handleMoveTradeInCategory = (
+    categorySlug: string,
+    tradeId: string,
+    direction: -1 | 1
+  ) => {
+    const catTrades = database.tradeRecords
+      .filter((t) => t.categorySlug === categorySlug)
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    const idx = catTrades.findIndex((t) => t.id === tradeId);
+    const targetIdx = idx + direction;
+    if (idx === -1 || targetIdx < 0 || targetIdx >= catTrades.length) return;
+
+    const reorderedCat = [...catTrades];
+    const [moved] = reorderedCat.splice(idx, 1);
+    reorderedCat.splice(targetIdx, 0, moved);
+    const reindexedCat = reorderedCat.map((t, i) => ({ ...t, order: i }));
+
+    const otherTrades = database.tradeRecords.filter((t) => t.categorySlug !== categorySlug);
+    void saveDraft({ tradeRecords: [...otherTrades, ...reindexedCat] });
+    showToast('Updated trade order');
+  };
+
+  const handleDeleteTradeRecord = (tradeId: string) => {
+    const nextRecords = database.tradeRecords.filter((t) => t.id !== tradeId);
+    void saveDraft({ tradeRecords: nextRecords });
+    if (selectedComponentId === `trade-rec-${tradeId}`) {
+      setSelectedComponentId(null);
+    }
+    showToast('Deleted trade card');
+  };
+
+  const handleAssignTradeCategory = (tradeId: string, newCategorySlug: string) => {
+    const targetCat = database.tradingCategories.find((c) => c.slug === newCategorySlug);
+    const existingInTarget = database.tradeRecords.filter(
+      (t) => t.categorySlug === newCategorySlug && t.id !== tradeId
+    );
+    const nextRecords = database.tradeRecords.map((t) =>
+      t.id === tradeId
+        ? {
+            ...t,
+            categorySlug: newCategorySlug,
+            ticker: targetCat ? targetCat.name : t.ticker,
+            order: existingInTarget.length,
+          }
+        : t
+    );
+    void saveDraft({ tradeRecords: nextRecords });
+    showToast(`Assigned trade to ${targetCat?.name || newCategorySlug}`);
+  };
+
+  const handleToggleTradeStatus = (tradeId: string) => {
+    const target = database.tradeRecords.find((t) => t.id === tradeId);
+    if (!target) return;
+    const nextStatus: 'draft' | 'published' =
+      target.status === 'published' ? 'draft' : 'published';
+    const nextRecords = database.tradeRecords.map((t) =>
+      t.id === tradeId ? { ...t, status: nextStatus } : t
+    );
+    void saveDraft({ tradeRecords: nextRecords });
+    showToast(nextStatus === 'published' ? 'Published trade card' : 'Unpublished trade card');
   };
 
   // Helper to apply field changes into the draft database
@@ -359,32 +496,79 @@ export const AdminCMSPage: React.FC = () => {
 
   const handleAddTradeRecord = (categorySlug: string) => {
     const newId = `trade-${Date.now()}`;
-    const ticker = categorySlug === 'btc-usdt' ? 'BTC/USDT' : categorySlug === 'eur-usd' ? 'EUR/USD' : 'GBP/USD';
+    const matchedCat = database.tradingCategories.find((c) => c.slug === categorySlug);
+    const ticker = matchedCat?.name || categorySlug.toUpperCase();
+    const existingCount = database.tradeRecords.filter((t) => t.categorySlug === categorySlug).length;
     const newTrade: TradeRecord = {
       id: newId,
       categorySlug,
       ticker,
-      title: `Institutional Order Block Execution on ${ticker}`,
+      title: `${ticker} Trade Setup`,
       date: new Date().toISOString().split('T')[0],
       timeframe: '4H • 15m',
-      strategy: 'Dec Edge',
-      setupType: 'Order Block (OB)',
+      strategy: matchedCat?.strategy?.split('//')[0]?.trim() || 'Order Flow',
+      setupType: 'Liquidity Sweep',
       riskReward: '1 : 5.0',
-      outcome: 'Target Hit (+100 Pips)',
-      pnlPercentage: '+1 : 5.0 RR',
-      entryPrice: '1.2650',
-      exitPrice: '1.2750',
-      stopLoss: '1.2630',
-      takeProfit: '1.2750',
-      chartImage: '/images/tech-analysis-showcase-1.jpg',
-      description: 'Predatory liquidity sweep mitigated into protected order block with POC confluence.',
-      analysisNotes: ['Volume POC absorbed', 'Clean 1:5 delivery'],
-      status: 'draft',
-      order: database.tradeRecords.length,
+      outcome: '',
+      pnlPercentage: '',
+      entryPrice: '',
+      exitPrice: '',
+      stopLoss: '',
+      takeProfit: '',
+      chartImage: matchedCat?.coverImage || '/images/tech-analysis-showcase-1.jpg',
+      description: '',
+      analysisNotes: [],
+      status: 'published',
+      order: existingCount,
     };
     void saveDraft({ tradeRecords: [...database.tradeRecords, newTrade] });
     setSelectedComponentId(`trade-rec-${newId}`);
-    showToast(`Created new draft trade for ${ticker}`);
+    showToast(`Added new trade card to ${ticker}`);
+  };
+
+  const handleDeleteBrandProject = (id: string) => {
+    void saveDraft({ brandProjects: database.brandProjects.filter((p) => p.id !== id) });
+    if (selectedComponentId === `brand-${id}`) setSelectedComponentId(null);
+    showToast('Deleted brand project');
+  };
+
+  const handleDeleteVideoProject = (id: string) => {
+    void saveDraft({ videoProjects: database.videoProjects.filter((v) => v.id !== id) });
+    if (selectedComponentId === `video-${id}`) setSelectedComponentId(null);
+    showToast('Deleted video section');
+  };
+
+  const handleAddTradingCategory = () => {
+    const newId = `cat-${Date.now()}`;
+    const newCat: TradingCategory = {
+      id: newId,
+      slug: `instrument-${Date.now()}`,
+      name: 'XAU/USD',
+      market: 'Commodities',
+      focusAsset: 'XAU/USD',
+      weeklyHigh: '2,750.00',
+      spread: '0.8 Pips',
+      strategy: 'Liquidity Sweep & Institutional Order Block',
+      description: 'Institutional liquidity structure and multi-timeframe order flow execution.',
+      coverImage: '/images/tech-analysis-showcase-1.jpg',
+      status: 'published',
+      order: database.tradingCategories.length,
+    };
+    void saveDraft({ tradingCategories: [...database.tradingCategories, newCat] });
+    setSelectedComponentId(`trade-cat-${newId}`);
+    showToast('Added new Technical Analysis instrument page');
+  };
+
+  const handleDeleteTradingCategory = (id: string) => {
+    const cat = database.tradingCategories.find((c) => c.id === id);
+    void saveDraft({
+      tradingCategories: database.tradingCategories.filter((c) => c.id !== id),
+      tradeRecords: cat
+        ? database.tradeRecords.filter((t) => t.categorySlug !== cat.slug)
+        : database.tradeRecords,
+    });
+    if (selectedComponentId === `trade-cat-${id}`) setSelectedComponentId(null);
+    showToast('Deleted instrument page');
   };
 
   // If not authenticated, render Login Shield
@@ -447,6 +631,21 @@ export const AdminCMSPage: React.FC = () => {
   const currentSelectedEntity = (() => {
     if (!selectedComponentId) return null;
 
+    if (selectedComponentId === 'site-branding') {
+      return { type: 'site-branding', data: siteContent };
+    }
+    if (selectedComponentId === 'site-workflow') {
+      return { type: 'site-workflow', data: siteContent.workflow };
+    }
+    if (selectedComponentId === 'site-about') {
+      return { type: 'site-about', data: siteContent.about };
+    }
+    if (selectedComponentId === 'site-contact') {
+      return { type: 'site-contact', data: siteContent.contact };
+    }
+    if (selectedComponentId === 'site-footer') {
+      return { type: 'site-footer', data: siteContent.footer };
+    }
     if (selectedComponentId.startsWith('hero-slide-')) {
       const idx = parseInt(selectedComponentId.replace('hero-slide-', ''), 10);
       return { type: 'hero-slide', data: database.heroConfig.slides[idx], index: idx };
@@ -498,7 +697,7 @@ export const AdminCMSPage: React.FC = () => {
             className="flex items-center gap-2 group"
             title="Return to Public Website"
           >
-            <img src="/images/ods-logo.png" alt="ODS" className="w-7 h-7 object-contain rounded-full border border-white/10" />
+            <img src={siteContent.branding.logoImage || '/images/ods-logo.png'} alt={siteContent.branding.logoAlt || 'ODS'} className="w-7 h-7 object-contain rounded-full border border-white/10" />
             <span className="font-display font-bold text-sm tracking-tight text-white group-hover:text-zinc-300">
               ODS Visual CMS
             </span>
@@ -606,6 +805,25 @@ export const AdminCMSPage: React.FC = () => {
                 Page Structure
               </span>
               <span className="text-[10px] font-mono text-zinc-600">Drag to Reorder</span>
+            </div>
+
+            {/* 0. GLOBAL BRANDING & SECTION HEADERS */}
+            <div>
+              <button
+                type="button"
+                onClick={() => setSelectedComponentId('site-branding')}
+                className={`w-full flex items-center justify-between p-2 rounded-lg text-left transition-colors ${
+                  selectedComponentId === 'site-branding'
+                    ? 'bg-white/[0.08] text-white'
+                    : 'hover:bg-white/[0.04] text-zinc-400'
+                }`}
+              >
+                <div className="flex items-center gap-2 text-xs font-display font-semibold">
+                  <Layers className="w-3.5 h-3.5 text-zinc-400" />
+                  <span>Site Branding &amp; Headers</span>
+                </div>
+                <span className="text-[10px] font-mono text-zinc-500">Global</span>
+              </button>
             </div>
 
             {/* 1. HERO SECTION */}
@@ -747,39 +965,67 @@ export const AdminCMSPage: React.FC = () => {
 
             {/* 4. TECHNICAL ANALYSIS CATEGORIES & TRADES */}
             <div>
-              <div className="p-1.5 text-xs font-display font-semibold text-zinc-300 mb-1">
-                <span>Technical Analysis</span>
+              <div className="flex items-center justify-between p-1.5 text-xs font-display font-semibold text-zinc-300 mb-1">
+                <span>Technical Analysis ({database.tradingCategories.length})</span>
+                <button
+                  type="button"
+                  onClick={handleAddTradingCategory}
+                  className="p-1 rounded hover:bg-white/10 text-zinc-400 hover:text-white"
+                  title="Add Technical Analysis Instrument Page"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                </button>
               </div>
 
               <div className="space-y-2">
                 {database.tradingCategories.map((c) => {
                   const isCatSelected = selectedComponentId === `trade-cat-${c.id}`;
-                  const catTrades = database.tradeRecords.filter((t) => t.categorySlug === c.slug);
+                  const catTrades = database.tradeRecords
+                    .filter((t) => t.categorySlug === c.slug)
+                    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
                   return (
-                    <div key={c.id} className="rounded-lg bg-black/30 border border-white/[0.06] p-2">
+                    <div
+                      key={c.id}
+                      onDragOver={(e) => e.preventDefault()}
+                      className="rounded-lg bg-black/30 border border-white/[0.06] p-2"
+                    >
                       <div
                         onClick={() => setSelectedComponentId(`trade-cat-${c.id}`)}
                         className={`flex items-center justify-between cursor-pointer py-1 px-1.5 rounded ${
                           isCatSelected ? 'bg-zinc-800 text-white font-semibold' : 'text-zinc-300 hover:text-white'
                         }`}
                       >
-                        <span className="text-xs font-mono">{c.name} ({c.market})</span>
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <span className="text-xs font-mono truncate">
+                            {c.name} ({catTrades.length})
+                          </span>
+                          <Link
+                            to={`/portfolio/technical-analysis/${c.slug}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            title={`Open ${c.name} public gallery`}
+                            className="text-zinc-500 hover:text-zinc-200 p-0.5"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                          </Link>
+                        </div>
                         <button
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleAddTradeRecord(c.slug);
                           }}
-                          className="text-[10px] text-zinc-400 hover:text-white p-0.5 rounded hover:bg-white/10 flex items-center gap-1"
+                          className="text-[10px] text-zinc-400 hover:text-white px-1.5 py-0.5 rounded hover:bg-white/10 flex items-center gap-1 shrink-0"
                         >
                           <Plus className="w-3 h-3" />
                           <span>Trade</span>
                         </button>
                       </div>
 
-                      {/* Trade records in this category */}
-                      <div className="mt-1 space-y-1 pl-2">
+                      {/* Trade cards in this category (drag-and-drop or arrow reorder, publish toggle, delete) */}
+                      <div className="mt-1.5 space-y-1 pl-1">
                         {catTrades.map((t, tIdx) => {
                           const isTradeSelected = selectedComponentId === `trade-rec-${t.id}`;
                           return (
@@ -788,27 +1034,115 @@ export const AdminCMSPage: React.FC = () => {
                               draggable
                               onDragStart={() => handleDragStart('tradeRecords', t.id, tIdx)}
                               onDragOver={(e) => e.preventDefault()}
-                              onDrop={() => handleDrop('tradeRecords', tIdx)}
+                              onDrop={(e) => {
+                                e.stopPropagation();
+                                handleDropTrade(c.slug, t.id);
+                              }}
                               onClick={() => setSelectedComponentId(`trade-rec-${t.id}`)}
-                              className={`px-1.5 py-1 rounded text-[11px] font-mono flex items-center justify-between cursor-pointer ${
+                              className={`group px-1.5 py-1.5 rounded text-[11px] font-mono flex items-center justify-between gap-1.5 cursor-pointer border transition-colors ${
                                 isTradeSelected
-                                  ? 'bg-zinc-700 text-white'
-                                  : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.02]'
+                                  ? 'bg-zinc-800 border-zinc-500 text-white'
+                                  : 'border-transparent text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.03]'
                               }`}
                             >
-                              <div className="flex items-center gap-1 min-w-0">
+                              <div className="flex items-center gap-1.5 min-w-0">
                                 <GripVertical className="w-3 h-3 text-zinc-600 cursor-grab shrink-0" />
-                                <span className="truncate">{t.title}</span>
+                                <span className="truncate">{t.title || t.date || t.ticker}</span>
                               </div>
-                              <span className="text-[9px] text-emerald-400 shrink-0">{t.riskReward}</span>
+
+                              <div className="flex items-center gap-1 shrink-0">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleMoveTradeInCategory(c.slug, t.id, -1);
+                                  }}
+                                  disabled={tIdx === 0}
+                                  title="Move up"
+                                  className="p-0.5 text-zinc-500 hover:text-white disabled:opacity-20 opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <ChevronUp className="w-3 h-3" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleMoveTradeInCategory(c.slug, t.id, 1);
+                                  }}
+                                  disabled={tIdx === catTrades.length - 1}
+                                  title="Move down"
+                                  className="p-0.5 text-zinc-500 hover:text-white disabled:opacity-20 opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <ChevronDown className="w-3 h-3" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleToggleTradeStatus(t.id);
+                                  }}
+                                  title={t.status === 'published' ? 'Click to unpublish' : 'Click to publish'}
+                                  className={`text-[9px] px-1.5 py-0.5 rounded shrink-0 ${
+                                    t.status === 'published'
+                                      ? 'bg-emerald-950 text-emerald-400'
+                                      : 'bg-amber-950 text-amber-400'
+                                  }`}
+                                >
+                                  {t.status === 'published' ? 'pub' : 'draft'}
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteTradeRecord(t.id);
+                                  }}
+                                  title="Delete trade card"
+                                  className="p-0.5 text-zinc-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                </button>
+                              </div>
                             </div>
                           );
                         })}
+
+                        {catTrades.length === 0 && (
+                          <div className="text-[10px] font-mono text-zinc-600 px-2 py-1">
+                            No trades assigned yet
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
                 })}
               </div>
+            </div>
+
+            {/* 5. STATIC & EDITORIAL PAGE SECTIONS (100% CMS Editable) */}
+            <div className="pt-2 border-t border-white/[0.08] space-y-1">
+              <div className="p-1.5 text-xs font-display font-semibold text-zinc-300">
+                <span>Editorial Page Sections</span>
+              </div>
+              {[
+                { id: 'site-workflow', label: 'Workflow Section', tag: `${siteContent.workflow.steps.length} Steps` },
+                { id: 'site-about', label: 'About & Studio Image', tag: 'Manifesto' },
+                { id: 'site-contact', label: 'Contact & Social Links', tag: 'Inquiry' },
+                { id: 'site-footer', label: 'Footer & Studio Info', tag: 'Global' },
+              ].map((sec) => (
+                <button
+                  key={sec.id}
+                  type="button"
+                  onClick={() => setSelectedComponentId(sec.id)}
+                  className={`w-full text-left px-2.5 py-2 rounded-lg text-xs font-mono flex items-center justify-between border transition-colors ${
+                    selectedComponentId === sec.id
+                      ? 'bg-zinc-800 border-zinc-500 text-white font-semibold'
+                      : 'bg-black/40 border-white/[0.05] text-zinc-400 hover:border-white/15 hover:text-zinc-200'
+                  }`}
+                >
+                  <span className="truncate">{sec.label}</span>
+                  <span className="text-[9px] text-zinc-500 shrink-0">{sec.tag}</span>
+                </button>
+              ))}
             </div>
 
           </div>
@@ -829,12 +1163,16 @@ export const AdminCMSPage: React.FC = () => {
                 : 'max-w-full'
             }`}
           >
-            {/* Embedded Live Preview with Real Typography, Spacing, and Click-to-Select */}
+            {/* Embedded Live Preview of ALL Sections with Click-to-Select */}
             <div className="pointer-events-auto">
               <CinematicHero />
               <BrandDesignSection />
               <VideoEditingSection />
               <TechnicalAnalysisSection />
+              <WorkflowSection />
+              <AboutSection />
+              <ContactSection />
+              <Footer />
             </div>
           </div>
         </main>
@@ -893,66 +1231,140 @@ export const AdminCMSPage: React.FC = () => {
                     )}
                   </div>
 
+                  {/* 0. Global Branding, Workflow, About, Contact & Footer Editors */}
+                  {(currentSelectedEntity.type === 'site-branding' ||
+                    currentSelectedEntity.type === 'site-workflow' ||
+                    currentSelectedEntity.type === 'site-about' ||
+                    currentSelectedEntity.type === 'site-contact' ||
+                    currentSelectedEntity.type === 'site-footer') && (
+                    <SiteContentEditor
+                      sectionType={currentSelectedEntity.type}
+                      siteContent={siteContent}
+                      onUpdateSection={updateSiteContentSection}
+                      onTriggerUpload={triggerUploadFor}
+                      onToast={showToast}
+                    />
+                  )}
+
                   {/* 1. Hero Slide Properties */}
-                  {currentSelectedEntity.type === 'hero-slide' && (
-                    <>
-                      <div>
-                        <label className="text-zinc-400 block mb-1">Discipline</label>
-                        <input
-                          type="text"
-                          value={(currentSelectedEntity.data as any).discipline}
-                          disabled
-                          className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-zinc-400"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-zinc-400 block mb-1">Primary Heading</label>
-                        <textarea
-                          rows={2}
-                          value={(currentSelectedEntity.data as any).title}
-                          onChange={(e) => applyFieldChange('title', e.target.value)}
-                          className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white focus:outline-none focus:border-zinc-400"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-zinc-400 block mb-1">One Concise Supporting Statement</label>
-                        <textarea
-                          rows={3}
-                          value={(currentSelectedEntity.data as any).description}
-                          onChange={(e) => applyFieldChange('description', e.target.value)}
-                          className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white focus:outline-none focus:border-zinc-400"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-zinc-400 block mb-1">Short Animated Supporting Phrase</label>
-                        <input
-                          type="text"
-                          value={(currentSelectedEntity.data as any).supportingPhrase || ''}
-                          onChange={(e) => applyFieldChange('supportingPhrase', e.target.value)}
-                          className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white focus:outline-none focus:border-zinc-400"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-zinc-400 block mb-1">Hero Image URL / Upload</label>
-                        <div className="flex gap-2">
+                  {currentSelectedEntity.type === 'hero-slide' && (() => {
+                    const slideData = currentSelectedEntity.data as any;
+                    const slideMetrics: HeroMetric[] = slideData.metrics || [];
+
+                    const updateMetric = (mIdx: number, patch: Partial<HeroMetric>) => {
+                      const nextMetrics = slideMetrics.map((m, idx) =>
+                        idx === mIdx ? { ...m, ...patch } : m
+                      );
+                      applyFieldChange('metrics', nextMetrics);
+                    };
+
+                    return (
+                      <>
+                        <div>
+                          <label className="text-zinc-400 block mb-1">Discipline Label (Top Eyebrow)</label>
                           <input
                             type="text"
-                            value={(currentSelectedEntity.data as any).imageSrc}
-                            onChange={(e) => applyFieldChange('imageSrc', e.target.value)}
-                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white focus:outline-none focus:border-zinc-400 text-[11px]"
+                            value={slideData.disciplineLabel || slideData.discipline}
+                            onChange={(e) => applyFieldChange('disciplineLabel', e.target.value)}
+                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
                           />
-                          <button
-                            type="button"
-                            onClick={() => triggerUploadFor('imageSrc')}
-                            className="p-1.5 rounded bg-white/10 hover:bg-white/20 text-white shrink-0"
-                            title="Upload replacement image"
-                          >
-                            <Upload className="w-3.5 h-3.5" />
-                          </button>
                         </div>
-                      </div>
-                    </>
-                  )}
+                        <div>
+                          <label className="text-zinc-400 block mb-1">Primary Heading</label>
+                          <textarea
+                            rows={2}
+                            value={slideData.title}
+                            onChange={(e) => applyFieldChange('title', e.target.value)}
+                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white focus:outline-none focus:border-zinc-400"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-zinc-400 block mb-1">One Concise Supporting Statement</label>
+                          <textarea
+                            rows={3}
+                            value={slideData.description}
+                            onChange={(e) => applyFieldChange('description', e.target.value)}
+                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white focus:outline-none focus:border-zinc-400"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-zinc-400 block mb-1">Short Animated Supporting Phrase</label>
+                          <input
+                            type="text"
+                            value={slideData.supportingPhrase || ''}
+                            onChange={(e) => applyFieldChange('supportingPhrase', e.target.value)}
+                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white focus:outline-none focus:border-zinc-400"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-zinc-400 block mb-1.5">Hero Image URL / Upload</label>
+                          <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden bg-[#0a0a0d] border border-white/10 mb-2">
+                            <img
+                              src={slideData.imageSrc || '/images/portrait-front.png'}
+                              alt={slideData.discipline}
+                              className="w-full h-full object-contain bg-[#09090c]"
+                            />
+                          </div>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={slideData.imageSrc}
+                              onChange={(e) => applyFieldChange('imageSrc', e.target.value)}
+                              className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white focus:outline-none focus:border-zinc-400 text-[11px]"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => triggerUploadFor('imageSrc')}
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded bg-zinc-100 hover:bg-white text-zinc-950 font-semibold text-[11px] shrink-0"
+                              title="Upload replacement image"
+                            >
+                              <Upload className="w-3.5 h-3.5" />
+                              <span>Upload</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Hero Slide Metrics Editor */}
+                        <div className="pt-3 border-t border-white/[0.08] space-y-2">
+                          <label className="text-zinc-300 font-semibold block">
+                            Slide Metrics ({slideMetrics.length})
+                          </label>
+                          {slideMetrics.map((m, mIdx) => (
+                            <div
+                              key={mIdx}
+                              className="p-2 rounded-lg bg-black/50 border border-white/10 space-y-1.5"
+                            >
+                              <div className="grid grid-cols-2 gap-1.5">
+                                <input
+                                  type="text"
+                                  placeholder="Label"
+                                  value={m.label}
+                                  onChange={(e) => updateMetric(mIdx, { label: e.target.value })}
+                                  className="px-2 py-1 rounded bg-black/60 border border-white/10 text-white text-[10px]"
+                                />
+                                <input
+                                  type="text"
+                                  placeholder="Display Value (e.g. 45+)"
+                                  value={m.value}
+                                  onChange={(e) => {
+                                    const raw = e.target.value;
+                                    const num = parseFloat(raw.replace(/[^0-9.]/g, ''));
+                                    const suf = raw.replace(/^[0-9.,\s]+/, '');
+                                    updateMetric(mIdx, {
+                                      value: raw,
+                                      numericValue: Number.isNaN(num) ? undefined : num,
+                                      suffix: suf,
+                                    });
+                                  }}
+                                  className="px-2 py-1 rounded bg-black/60 border border-white/10 text-white text-[10px]"
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    );
+                  })()}
 
                   {/* 2. Hero General Settings */}
                   {currentSelectedEntity.type === 'hero-general' && (
@@ -1024,14 +1436,25 @@ export const AdminCMSPage: React.FC = () => {
                             className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white text-[11px]"
                           />
                         </div>
-                        <div>
-                          <label className="text-zinc-400 block mb-1">Client</label>
-                          <input
-                            type="text"
-                            value={brandData.client}
-                            onChange={(e) => applyFieldChange('client', e.target.value)}
-                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
-                          />
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="text-zinc-400 block mb-1">Client</label>
+                            <input
+                              type="text"
+                              value={brandData.client}
+                              onChange={(e) => applyFieldChange('client', e.target.value)}
+                              className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-zinc-400 block mb-1">Year</label>
+                            <input
+                              type="text"
+                              value={brandData.year || ''}
+                              onChange={(e) => applyFieldChange('year', e.target.value)}
+                              className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
+                            />
+                          </div>
                         </div>
                         <div>
                           <label className="text-zinc-400 block mb-1">Category</label>
@@ -1168,6 +1591,27 @@ export const AdminCMSPage: React.FC = () => {
                           </div>
                         </div>
 
+                        {/* Design Objectives Editor */}
+                        <div className="pt-3 border-t border-white/[0.08]">
+                          <label className="text-zinc-400 block mb-1">
+                            Design Objectives (one per line)
+                          </label>
+                          <textarea
+                            rows={3}
+                            value={(brandData.designObjectives || []).join('\n')}
+                            onChange={(e) =>
+                              applyFieldChange(
+                                'designObjectives',
+                                e.target.value
+                                  .split('\n')
+                                  .map((s) => s.trim())
+                                  .filter(Boolean)
+                              )
+                            }
+                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white text-[11px]"
+                          />
+                        </div>
+
                         {/* Brand Gallery Assets (3-Column Grid) Editor */}
                         <div className="pt-3 border-t border-white/[0.08] space-y-2.5">
                           <div className="flex items-center justify-between">
@@ -1207,6 +1651,17 @@ export const AdminCMSPage: React.FC = () => {
                               </div>
                             ))}
                           </div>
+                        </div>
+
+                        <div className="pt-2">
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteBrandProject(brandData.id)}
+                            className="w-full py-2 rounded-lg text-xs font-semibold bg-red-950/50 hover:bg-red-900/70 text-red-300 border border-red-800/50 inline-flex items-center justify-center gap-1.5 transition-colors"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span>Delete Brand Project</span>
+                          </button>
                         </div>
                       </>
                     );
@@ -1369,7 +1824,7 @@ export const AdminCMSPage: React.FC = () => {
                                   className="w-full px-2.5 py-1 rounded bg-black/60 border border-white/10 text-white text-[11px]"
                                 />
 
-                                <div className="grid grid-cols-3 gap-1.5">
+                                <div className="grid grid-cols-2 gap-1.5">
                                   <input
                                     type="text"
                                     placeholder="Client"
@@ -1379,6 +1834,17 @@ export const AdminCMSPage: React.FC = () => {
                                     }
                                     className="px-2 py-1 rounded bg-black/60 border border-white/10 text-white text-[10px]"
                                   />
+                                  <input
+                                    type="text"
+                                    placeholder="Year / Date"
+                                    value={clip.date || ''}
+                                    onChange={(e) =>
+                                      handleUpdateRecentVideo(clipIdx, 'date', e.target.value)
+                                    }
+                                    className="px-2 py-1 rounded bg-black/60 border border-white/10 text-white text-[10px]"
+                                  />
+                                </div>
+                                <div className="grid grid-cols-2 gap-1.5">
                                   <input
                                     type="text"
                                     placeholder="01:30"
@@ -1469,172 +1935,336 @@ export const AdminCMSPage: React.FC = () => {
                             ))}
                           </div>
                         </div>
+
+                        <div className="pt-2">
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteVideoProject(videoSec.id)}
+                            className="w-full py-2 rounded-lg text-xs font-semibold bg-red-950/50 hover:bg-red-900/70 text-red-300 border border-red-800/50 inline-flex items-center justify-center gap-1.5 transition-colors"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span>Delete Video Section</span>
+                          </button>
+                        </div>
                       </>
                     );
                   })()}
 
                   {/* 5. Trading Category Properties */}
-                  {currentSelectedEntity.type === 'trading-category' && (
-                    <>
-                      <div>
-                        <label className="text-zinc-400 block mb-1">Instrument Name</label>
-                        <input
-                          type="text"
-                          value={(currentSelectedEntity.data as any).name}
-                          onChange={(e) => applyFieldChange('name', e.target.value)}
-                          className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-zinc-400 block mb-1">Weekly High &amp; Spread</label>
+                  {currentSelectedEntity.type === 'trading-category' && (() => {
+                    const catData = currentSelectedEntity.data as TradingCategory;
+                    return (
+                      <>
                         <div className="grid grid-cols-2 gap-2">
-                          <input
-                            type="text"
-                            value={(currentSelectedEntity.data as any).weeklyHigh}
-                            onChange={(e) => applyFieldChange('weeklyHigh', e.target.value)}
-                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
-                          />
-                          <input
-                            type="text"
-                            value={(currentSelectedEntity.data as any).spread}
-                            onChange={(e) => applyFieldChange('spread', e.target.value)}
+                          <div>
+                            <label className="text-zinc-400 block mb-1">Instrument Name</label>
+                            <input
+                              type="text"
+                              value={catData.name}
+                              onChange={(e) => applyFieldChange('name', e.target.value)}
+                              className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-zinc-400 block mb-1">Market</label>
+                            <select
+                              value={catData.market}
+                              onChange={(e) => applyFieldChange('market', e.target.value)}
+                              className="w-full px-2.5 py-1.5 rounded bg-black/60 border border-white/10 text-white"
+                            >
+                              <option value="Forex">Forex</option>
+                              <option value="Crypto">Crypto</option>
+                              <option value="Indices">Indices</option>
+                              <option value="Commodities">Commodities</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="text-zinc-400 block mb-1">Focus Asset</label>
+                            <input
+                              type="text"
+                              value={catData.focusAsset}
+                              onChange={(e) => applyFieldChange('focusAsset', e.target.value)}
+                              className="w-full px-2.5 py-1.5 rounded bg-black/60 border border-white/10 text-white text-[11px]"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-zinc-400 block mb-1">URL Slug</label>
+                            <input
+                              type="text"
+                              value={catData.slug}
+                              onChange={(e) => applyFieldChange('slug', e.target.value)}
+                              className="w-full px-2.5 py-1.5 rounded bg-black/60 border border-white/10 text-white text-[11px]"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-zinc-400 block mb-1">Weekly High &amp; Typical Spread</label>
+                          <div className="grid grid-cols-2 gap-2">
+                            <input
+                              type="text"
+                              value={catData.weeklyHigh}
+                              onChange={(e) => applyFieldChange('weeklyHigh', e.target.value)}
+                              className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
+                            />
+                            <input
+                              type="text"
+                              value={catData.spread}
+                              onChange={(e) => applyFieldChange('spread', e.target.value)}
+                              className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-zinc-400 block mb-1">Strategy Framework</label>
+                          <textarea
+                            rows={2}
+                            value={catData.strategy}
+                            onChange={(e) => applyFieldChange('strategy', e.target.value)}
                             className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
                           />
                         </div>
-                      </div>
-                      <div>
-                        <label className="text-zinc-400 block mb-1">Strategy Framework</label>
-                        <textarea
-                          rows={2}
-                          value={(currentSelectedEntity.data as any).strategy}
-                          onChange={(e) => applyFieldChange('strategy', e.target.value)}
-                          className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-zinc-400 block mb-1">Category Chart / Cover Image</label>
-                        <div className="flex gap-2">
-                          <input
-                            type="text"
-                            value={(currentSelectedEntity.data as any).coverImage || ''}
-                            onChange={(e) => applyFieldChange('coverImage', e.target.value)}
-                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white text-[11px]"
+                        <div>
+                          <label className="text-zinc-400 block mb-1">Page Description / Liquidity Overview</label>
+                          <textarea
+                            rows={3}
+                            value={catData.description}
+                            onChange={(e) => applyFieldChange('description', e.target.value)}
+                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
                           />
+                        </div>
+                        <div>
+                          <label className="text-zinc-400 block mb-1">Category Chart / Cover Image</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={catData.coverImage || ''}
+                              onChange={(e) => applyFieldChange('coverImage', e.target.value)}
+                              className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white text-[11px]"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => triggerUploadFor('coverImage')}
+                              className="p-1.5 rounded bg-white/10 hover:bg-white/20 text-white shrink-0"
+                              title="Upload category cover image"
+                            >
+                              <Upload className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                        <div className="pt-2 flex items-center justify-between gap-2">
                           <button
                             type="button"
-                            onClick={() => triggerUploadFor('coverImage')}
-                            className="p-1.5 rounded bg-white/10 hover:bg-white/20 text-white shrink-0"
-                            title="Upload category cover image"
+                            onClick={() => handleAddTradeRecord(catData.slug)}
+                            className="flex-1 py-2 rounded-lg bg-zinc-100 hover:bg-white text-zinc-950 font-semibold text-xs inline-flex items-center justify-center gap-1.5"
                           >
-                            <Upload className="w-3.5 h-3.5" />
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>Add Trade to {catData.name}</span>
                           </button>
+                          <Link
+                            to={`/portfolio/technical-analysis/${catData.slug}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2 rounded-lg bg-white/[0.06] hover:bg-white/15 text-zinc-300 hover:text-white border border-white/10"
+                            title={`Preview ${catData.name} page`}
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </Link>
                         </div>
-                      </div>
-                    </>
-                  )}
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteTradingCategory(catData.id)}
+                          className="w-full py-2 rounded-lg text-xs font-semibold bg-red-950/50 hover:bg-red-900/70 text-red-300 border border-red-800/50 inline-flex items-center justify-center gap-1.5 transition-colors"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>Delete Instrument Page</span>
+                        </button>
+                      </>
+                    );
+                  })()}
 
-                  {/* 6. Trade Record Properties */}
-                  {currentSelectedEntity.type === 'trade-record' && (
-                    <>
-                      <div>
-                        <label className="text-zinc-400 block mb-1">Trade Title</label>
-                        <input
-                          type="text"
-                          value={(currentSelectedEntity.data as any).title}
-                          onChange={(e) => applyFieldChange('title', e.target.value)}
-                          className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-zinc-400 block mb-1">Date &amp; Timeframe</label>
-                        <div className="grid grid-cols-2 gap-2">
+                  {/* 6. Trade Card Properties (4-Column Trade Gallery CMS) */}
+                  {currentSelectedEntity.type === 'trade-record' && (() => {
+                    const tradeData = currentSelectedEntity.data as TradeRecord;
+                    return (
+                      <>
+                        {/* Live Uncropped Trade Screenshot Preview + Upload / Replace */}
+                        <div>
+                          <label className="text-zinc-400 block mb-1.5">Trade Chart Screenshot</label>
+                          <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden bg-[#0a0a0d] border border-white/10 mb-2">
+                            <img
+                              src={tradeData.chartImage || '/images/tech-analysis-showcase-1.jpg'}
+                              alt={tradeData.title || tradeData.ticker}
+                              className="w-full h-full object-contain bg-[#09090c]"
+                            />
+                          </div>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={tradeData.chartImage || ''}
+                              onChange={(e) => applyFieldChange('chartImage', e.target.value)}
+                              placeholder="/uploads/trade-chart.png"
+                              className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white text-[11px]"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => triggerUploadFor('chartImage')}
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded bg-zinc-100 hover:bg-white text-zinc-950 font-semibold text-[11px] shrink-0"
+                              title="Upload or replace trade screenshot"
+                            >
+                              <Upload className="w-3.5 h-3.5" />
+                              <span>Upload</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Assign Trade to Technical Analysis Page */}
+                        <div>
+                          <label className="text-zinc-400 block mb-1">
+                            Assigned Technical Analysis Page
+                          </label>
+                          <select
+                            value={tradeData.categorySlug}
+                            onChange={(e) => handleAssignTradeCategory(tradeData.id, e.target.value)}
+                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
+                          >
+                            {database.tradingCategories.map((cat) => (
+                              <option key={cat.id} value={cat.slug}>
+                                {cat.name} ({cat.market})
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        {/* Optional Trade Title */}
+                        <div>
+                          <label className="text-zinc-400 block mb-1">
+                            Trade Title <span className="text-zinc-600">(Optional)</span>
+                          </label>
                           <input
                             type="text"
-                            value={(currentSelectedEntity.data as any).date}
+                            placeholder="e.g. Weekly High Liquidity Sweep"
+                            value={tradeData.title || ''}
+                            onChange={(e) => applyFieldChange('title', e.target.value)}
+                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
+                          />
+                        </div>
+
+                        {/* Trade Date */}
+                        <div>
+                          <label className="text-zinc-400 block mb-1">Trade Date</label>
+                          <input
+                            type="date"
+                            value={/^\d{4}-\d{2}-\d{2}$/.test(tradeData.date || '') ? tradeData.date : ''}
                             onChange={(e) => applyFieldChange('date', e.target.value)}
-                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
+                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white [color-scheme:dark]"
                           />
-                          <input
-                            type="text"
-                            value={(currentSelectedEntity.data as any).timeframe}
-                            onChange={(e) => applyFieldChange('timeframe', e.target.value)}
+                          {tradeData.date && !/^\d{4}-\d{2}-\d{2}$/.test(tradeData.date) && (
+                            <input
+                              type="text"
+                              value={tradeData.date}
+                              onChange={(e) => applyFieldChange('date', e.target.value)}
+                              className="mt-1.5 w-full px-3 py-1 rounded bg-black/60 border border-white/10 text-zinc-300 text-[11px]"
+                            />
+                          )}
+                        </div>
+
+                        {/* Optional Short Description / Trading Note */}
+                        <div>
+                          <label className="text-zinc-400 block mb-1">
+                            Short Description / Trading Note{' '}
+                            <span className="text-zinc-600">(Optional)</span>
+                          </label>
+                          <textarea
+                            rows={3}
+                            placeholder="Concise setup summary or execution note..."
+                            value={tradeData.description || ''}
+                            onChange={(e) => applyFieldChange('description', e.target.value)}
                             className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
                           />
                         </div>
-                      </div>
-                      <div>
-                        <label className="text-zinc-400 block mb-1">Risk:Reward &amp; Outcome</label>
-                        <div className="grid grid-cols-2 gap-2">
-                          <input
-                            type="text"
-                            value={(currentSelectedEntity.data as any).riskReward}
-                            onChange={(e) => applyFieldChange('riskReward', e.target.value)}
-                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
-                          />
-                          <input
-                            type="text"
-                            value={(currentSelectedEntity.data as any).outcome || ''}
-                            onChange={(e) => applyFieldChange('outcome', e.target.value)}
-                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="text-zinc-400 block mb-1">Execution (Entry / Stop / Target)</label>
-                        <div className="grid grid-cols-3 gap-1.5">
-                          <input
-                            type="text"
-                            placeholder="Entry"
-                            value={(currentSelectedEntity.data as any).entryPrice || ''}
-                            onChange={(e) => applyFieldChange('entryPrice', e.target.value)}
-                            className="w-full px-2 py-1 rounded bg-black/60 border border-white/10 text-white text-[11px]"
-                          />
-                          <input
-                            type="text"
-                            placeholder="Stop"
-                            value={(currentSelectedEntity.data as any).stopLoss || ''}
-                            onChange={(e) => applyFieldChange('stopLoss', e.target.value)}
-                            className="w-full px-2 py-1 rounded bg-black/60 border border-white/10 text-white text-[11px]"
-                          />
-                          <input
-                            type="text"
-                            placeholder="Take Profit"
-                            value={(currentSelectedEntity.data as any).takeProfit || ''}
-                            onChange={(e) => applyFieldChange('takeProfit', e.target.value)}
-                            className="w-full px-2 py-1 rounded bg-black/60 border border-white/10 text-white text-[11px]"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="text-zinc-400 block mb-1">Analysis &amp; Thesis</label>
-                        <textarea
-                          rows={3}
-                          value={(currentSelectedEntity.data as any).description}
-                          onChange={(e) => applyFieldChange('description', e.target.value)}
-                          className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-zinc-400 block mb-1">Chart Image</label>
-                        <div className="flex gap-2">
-                          <input
-                            type="text"
-                            value={(currentSelectedEntity.data as any).chartImage}
-                            onChange={(e) => applyFieldChange('chartImage', e.target.value)}
-                            className="w-full px-3 py-1.5 rounded bg-black/60 border border-white/10 text-white text-[11px]"
-                          />
+
+                        {/* Optional Extended Coordinates */}
+                        <details className="rounded-lg bg-black/30 border border-white/[0.06] p-2.5">
+                          <summary className="text-[11px] text-zinc-400 cursor-pointer select-none">
+                            Optional Metadata (Timeframe, R:R, Levels)
+                          </summary>
+                          <div className="mt-3 space-y-2.5">
+                            <div className="grid grid-cols-2 gap-2">
+                              <input
+                                type="text"
+                                placeholder="Timeframe"
+                                value={tradeData.timeframe || ''}
+                                onChange={(e) => applyFieldChange('timeframe', e.target.value)}
+                                className="w-full px-2.5 py-1 rounded bg-black/60 border border-white/10 text-white text-[11px]"
+                              />
+                              <input
+                                type="text"
+                                placeholder="Risk : Reward"
+                                value={tradeData.riskReward || ''}
+                                onChange={(e) => applyFieldChange('riskReward', e.target.value)}
+                                className="w-full px-2.5 py-1 rounded bg-black/60 border border-white/10 text-white text-[11px]"
+                              />
+                            </div>
+                            <input
+                              type="text"
+                              placeholder="Outcome (e.g. Target Hit +100 Pips)"
+                              value={tradeData.outcome || ''}
+                              onChange={(e) => applyFieldChange('outcome', e.target.value)}
+                              className="w-full px-2.5 py-1 rounded bg-black/60 border border-white/10 text-white text-[11px]"
+                            />
+                            <div className="grid grid-cols-3 gap-1.5">
+                              <input
+                                type="text"
+                                placeholder="Entry"
+                                value={tradeData.entryPrice || ''}
+                                onChange={(e) => applyFieldChange('entryPrice', e.target.value)}
+                                className="w-full px-2 py-1 rounded bg-black/60 border border-white/10 text-white text-[11px]"
+                              />
+                              <input
+                                type="text"
+                                placeholder="Stop"
+                                value={tradeData.stopLoss || ''}
+                                onChange={(e) => applyFieldChange('stopLoss', e.target.value)}
+                                className="w-full px-2 py-1 rounded bg-black/60 border border-white/10 text-white text-[11px]"
+                              />
+                              <input
+                                type="text"
+                                placeholder="Target"
+                                value={tradeData.takeProfit || ''}
+                                onChange={(e) => applyFieldChange('takeProfit', e.target.value)}
+                                className="w-full px-2 py-1 rounded bg-black/60 border border-white/10 text-white text-[11px]"
+                              />
+                            </div>
+                          </div>
+                        </details>
+
+                        {/* Individual Publish / Unpublish & Delete Actions */}
+                        <div className="pt-2 grid grid-cols-2 gap-2">
                           <button
                             type="button"
-                            onClick={() => triggerUploadFor('chartImage')}
-                            className="p-1.5 rounded bg-white/10 hover:bg-white/20 text-white shrink-0"
-                            title="Upload chart image"
+                            onClick={() => handleToggleTradeStatus(tradeData.id)}
+                            className={`py-2 rounded-lg text-xs font-semibold border transition-colors ${
+                              tradeData.status === 'published'
+                                ? 'bg-amber-950/60 hover:bg-amber-900/70 text-amber-300 border-amber-700/50'
+                                : 'bg-emerald-950/60 hover:bg-emerald-900/70 text-emerald-300 border-emerald-700/50'
+                            }`}
                           >
-                            <Upload className="w-3.5 h-3.5" />
+                            {tradeData.status === 'published' ? 'Unpublish' : 'Publish Trade'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteTradeRecord(tradeData.id)}
+                            className="py-2 rounded-lg text-xs font-semibold bg-red-950/50 hover:bg-red-900/70 text-red-300 border border-red-800/50 inline-flex items-center justify-center gap-1.5 transition-colors"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span>Delete</span>
                           </button>
                         </div>
-                      </div>
-                    </>
-                  )}
+                      </>
+                    );
+                  })()}
 
                   <div className="pt-4 border-t border-white/[0.08]">
                     <button
@@ -1685,12 +2315,19 @@ export const AdminCMSPage: React.FC = () => {
                     <div
                       key={idx}
                       onClick={() => {
-                        if (selectedComponentId) {
-                          applyFieldChange('coverImage', item.url);
+                        if (!selectedComponentId) return;
+                        if (selectedComponentId === 'site-branding') {
+                          updateSiteContentSection('branding', { logoImage: item.url });
+                        } else if (selectedComponentId === 'site-about') {
+                          updateSiteContentSection('about', { image: item.url });
+                        } else if (selectedComponentId.startsWith('hero-slide-')) {
                           applyFieldChange('imageSrc', item.url);
+                        } else if (selectedComponentId.startsWith('trade-rec-')) {
                           applyFieldChange('chartImage', item.url);
-                          showToast(`Applied ${item.name}`);
+                        } else {
+                          applyFieldChange('coverImage', item.url);
                         }
+                        showToast(`Applied ${item.name}`);
                       }}
                       className="group relative flex flex-col rounded-lg overflow-hidden bg-zinc-900 border border-white/10 hover:border-white/30 cursor-pointer transition-all"
                     >

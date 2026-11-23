@@ -2,10 +2,12 @@ import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { useCMS } from '../context/CMSContext';
+import { INITIAL_SITE_CONTENT } from '../data/initialCmsData';
 import { BrandCategory } from '../types';
 
 export const BrandDesignSection: React.FC = () => {
   const { database, setSelectedComponentId, isAdmin } = useCMS();
+  const headers = database.siteContent?.sectionHeaders || INITIAL_SITE_CONTENT.sectionHeaders;
   // Default to Logo Branding; "All" link has been removed
   const [activeCategory, setActiveCategory] = useState<BrandCategory>('Logo Branding');
   const [showAllBrands, setShowAllBrands] = useState<boolean>(false);
@@ -22,9 +24,9 @@ export const BrandDesignSection: React.FC = () => {
   const hasMoreBrands = filteredProjects.length > 3;
 
   const categories: { key: BrandCategory; label: string }[] = [
-    { key: 'Logo Branding', label: 'Brand Logos' },
-    { key: 'Social Media Design', label: 'Social Media' },
-    { key: 'Flyers', label: 'Flyers' },
+    { key: 'Logo Branding', label: headers.brandTabLogos || 'Brand Logos' },
+    { key: 'Social Media Design', label: headers.brandTabSocial || 'Social Media' },
+    { key: 'Flyers', label: headers.brandTabFlyers || 'Flyers' },
   ];
 
   const handleCategoryChange = (cat: BrandCategory) => {
@@ -44,11 +46,11 @@ export const BrandDesignSection: React.FC = () => {
             <div className="flex items-center gap-2 mb-2">
               <span className="h-1.5 w-1.5 rounded-full bg-zinc-400" />
               <span className="text-xs font-mono uppercase tracking-widest text-zinc-400">
-                Discipline 01
+                {headers.brandEyebrow}
               </span>
             </div>
             <h2 className="font-display font-bold text-2xl sm:text-3xl md:text-4xl text-zinc-100 tracking-tight leading-[1.12]">
-              BRAND DESIGN &amp; VISUAL SYSTEMS
+              {headers.brandTitle}
             </h2>
           </div>
 
